@@ -1,19 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   here_doc.c                                         :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/01 14:44:36 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/03 20:42:02 by ekeinan          ###   ########.fr       */
+/*   Created: 2025/02/03 17:28:55 by ekeinan           #+#    #+#             */
+/*   Updated: 2025/02/04 12:15:27 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-int	here_doc(char **args)
+// NAIVE IMPLEMENTATION, ACCOUNT FOR SUBSEQUENT CHARACTERS?
+bool is_operator(char *arg)
 {
-	(void) args;
-	return (0);	
+	return (arg && (*arg  == '|' || *arg  == '<' || *arg  == '>'));
+}
+void *free_ptr_arr(void **vector, size_t len)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < len)
+		free(vector[i++]);
+	free(vector);
+	return (NULL);
 }

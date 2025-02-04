@@ -6,7 +6,7 @@
 #    By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/11 09:31:47 by ekeinan           #+#    #+#              #
-#    Updated: 2025/02/01 14:24:08 by ekeinan          ###   ########.fr        #
+#    Updated: 2025/02/04 11:08:43 by ekeinan          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,11 +15,15 @@ NAME = pipex
 LIBFT_DIR = libft_full
 LIBFT_LIB = $(LIBFT_DIR)/libft_full.a
 
-SRC_CORE = main.c
+SRC_DIR = src
+SRC_FILES = main.c \
+			pipex.c \
+			cmd.c \
+			here_doc.c
 
 COMPILE_FLAGS = -Wall -Wextra -Werror
 
-OBJ_CORE = $(SRC_CORE:.c=.o)
+OBJ = $(SRC_FILES:%.c=$(SRC_DIR)/%.o)
 
 all: $(NAME)
 
@@ -29,16 +33,16 @@ $(LIBFT_LIB):
 %.o: %.c
 	cc $(COMPILE_FLAGS) -c $< -o $@
 
-$(NAME): $(LIBFT_LIB) $(OBJ_CORE)
-	cc $(COMPILE_FLAGS) $(OBJ_CORE) $(LIBFT_LIB) -o $(NAME)
+$(NAME): $(LIBFT_LIB) $(OBJ)
+	cc $(COMPILE_FLAGS) $(OBJ) $(LIBFT_LIB) -o $(NAME)
 
 clean:
 	@make -C $(LIBFT_DIR) $@ --no-print-directory
-	@rm -f $(OBJ_CORE) $(OBJ_BONUS)
+	@rm -f $(OBJ)
 
 fclean: clean
 	@make -C $(LIBFT_DIR) $@ --no-print-directory
-	rm -f $(NAME) $(CHECKER_NAME) $(BONUS_NAME)
+	rm -rf $(NAME)
 
 re: fclean all
 
