@@ -17,13 +17,25 @@ bool is_operator(char *arg)
 {
 	return (arg && (*arg  == '|' || *arg  == '<' || *arg  == '>'));
 }
-void *free_ptr_arr(void **vector, size_t len)
+void *free_str_arr(char **arr, size_t len)
 {
 	size_t	i;
 
 	i = 0;
 	while (i < len)
-		free(vector[i++]);
-	free(vector);
+		free(arr[i++]);
+	free(arr);
 	return (NULL);
+}
+
+size_t	len_until_chr(char *str, char chr)
+{
+	size_t	i;
+
+	if (!str)
+		return (0);
+	i = 0;
+	while (str[i] && str[i] != chr)
+		i++;
+	return (i);
 }

@@ -19,6 +19,8 @@ SRC_DIR = src
 SRC_FILES = main.c \
 			pipex.c \
 			cmd.c \
+			utils.c \
+			perrs.c \
 			here_doc.c
 
 COMPILE_FLAGS = -Wall -Wextra -Werror

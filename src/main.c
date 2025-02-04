@@ -14,7 +14,11 @@
 
 int	main(int argc, char **argv, char **envp)
 {
+	t_shell shell;
+	(void) argc;
 
+	// shell.bin_paths = ;
+	ft_printf(path_to_binary(envp, argv[1]));
 	// bool	here_doc_mode;
 	// here_doc_mode = (argc == 5 && ft_strncmp(argv[0], "here_doc", 9));
 	// if (!here_doc_mode && argc != 4)
@@ -22,6 +26,6 @@ int	main(int argc, char **argv, char **envp)
 	// if (here_doc_mode)
 	// 	return (here_doc(&argv[1]));
 	// else
-	//return (run_command());
-	return (pipex(argc, argv, envp));
+	//  return (run_command());
+	//return (pipex(argc, argv, envp));
 }

@@ -17,8 +17,8 @@ int	pipex(int argc, char **argv, char **envp)
 	int		i;
 	int		infile;
 	t_cmd	cmd;
-	int		outfile;
-	pid_t	pid;
+	// int		outfile;
+	// pid_t	pid;
 	
 	infile = open(argv[0], O_RDONLY);
 	if (infile < -1)
@@ -37,6 +37,7 @@ int	pipex(int argc, char **argv, char **envp)
 			exit(0);
 		}
 		run_cmd(cmd.argc, cmd.argv, envp, 0); // REPLACE WITH DUPED FD?
+		
 
 
 	}

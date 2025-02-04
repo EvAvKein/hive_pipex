@@ -14,7 +14,7 @@
 
 static char **dupe_argv(int argc, char **argv)
 {
-	size_t	i;
+	int	i;
 	char	**copy;
 	char	*dupe;
 
@@ -26,7 +26,7 @@ static char **dupe_argv(int argc, char **argv)
 	{
 		dupe = ft_strdup(argv[i]);
 		if (!dupe)
-			return (free_ptr_arr(copy, i));
+			return (free_str_arr(copy, i));
 		copy[i] = dupe;
 		i++;
 	}
@@ -34,16 +34,23 @@ static char **dupe_argv(int argc, char **argv)
 	return (copy);
 }
 
-char *path_to_binary(char *command)
+char *path_to_binary(char **envp, char *cmd)
 {
-	char **bin_dirs;
-	
-	if (!bin_dirs)
+	char path;
+
+	if (!cmd || !*cmd)
+		return (NULL);
+	while (ft_strncmp(*envp, "PATH=", 5))
+		envp++;
+	if (!*envp)
+		return ((void *) !perr("PLACEHOLDER ERR: PATH env not found\n"));
+	ft_printf("%s\n", *envp);
+	return (NULL);
 }
 
 t_cmd args_to_cmd(int argc, char **argv)
 {
-	size_t	i;
+	int	i;
 	char	**args;
 
 	i = 0;
@@ -63,21 +70,29 @@ t_cmd args_to_cmd(int argc, char **argv)
 
 void run_cmd(int argc, char **argv, char **envp, int dest_fd)
 {
-	pid_t	pid;
+//	char		*bin_path;
+	pid_t		pid;
+//	(void) bin_path;
+	(void) argc;
+	(void) argv;
+	(void) envp;
+	(void) dest_fd;
 
 	// dup (2?) 0
-	
+
+	// bin_path = path_to_binary();
+
 	pid = fork();
 	if (pid < 0)
 		exit(!ft_printf("ABANDON SHIP. ABANDON SHIP."));
 	else if (!pid)
 	{
 		ft_printf("in child\n");
-		execve();
+		// execve();
 	}
 	else
 	{	
 		ft_printf("in parent\n");
-	
+		// waitpid();
 	}
 }
