@@ -6,93 +6,66 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 21:15:03 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/04 13:21:54 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/05 14:47:22by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/pipex.h"
+#include "pipex.h"
 
-static char **dupe_argv(int argc, char **argv)
+t_cmd str_to_cmd(char *str)
 {
-	int	i;
-	char	**copy;
-	char	*dupe;
+	int		i;
+	char	**split;
 
-	i = 0;
-	copy = ft_calloc(argc + 1, sizeof(char *));
-	if (!copy)
-		return (NULL);
-	while (i < argc)
-	{
-		dupe = ft_strdup(argv[i]);
-		if (!dupe)
-			return (free_str_arr(copy, i));
-		copy[i] = dupe;
-		i++;
-	}
-	copy[i] = NULL;
-	return (copy);
-}
-
-char *path_to_binary(char **envp, char *cmd)
-{
-	char path;
-
-	if (!cmd || !*cmd)
-		return (NULL);
-	while (ft_strncmp(*envp, "PATH=", 5))
-		envp++;
-	if (!*envp)
-		return ((void *) !perr("PLACEHOLDER ERR: PATH env not found\n"));
-	ft_printf("%s\n", *envp);
-	return (NULL);
-}
-
-t_cmd args_to_cmd(int argc, char **argv)
-{
-	int	i;
-	char	**args;
-
-	i = 0;
-	while (i < argc)
-	{
-		if (is_operator(argv[i]))
-			break; // MINISHELL: ADD SPECIFIC ERRORS
-		i++;
-	}
-	if (!i)
+	if (!str)
 		return ((t_cmd){.mergedc = 0, .argc = 0, .argv = NULL});
-	args = dupe_argv(i, argv);
-	if (!args && perrno("Command-handling error", ENOMEM))
-		return ((t_cmd){.mergedc = 0, .argc = 0, .argv = NULL});	
-	return ((t_cmd){.mergedc = i, .argc = i, .argv = args});	
+	split = ft_split(str, ' ');
+	if (!split)
+	{
+		perrno("Command parsing", ENOMEM);
+		return ((t_cmd){.mergedc = 0, .argc = 0, .argv = NULL});
+	}
+	i = 0;
+	while (split[i])
+		i++;
+	if (!i)
+	{
+		free_str_arr(split);
+		return ((t_cmd){.mergedc = 0, .argc = 0, .argv = NULL});
+	}
+	return ((t_cmd){.mergedc = i, .argc = i, .argv = split});	
 }
 
-void run_cmd(int argc, char **argv, char **envp, int dest_fd)
+static void exec(t_shell *shell, t_cmd *cmd, char *bin_path)
+{
+	char	*execve_prerror_s;
+
+	execve(bin_path, cmd->argv, shell->envp);
+	execve_prerror_s = ft_strjoin("pipex: ", bin_path);
+	perror(execve_prerror_s);
+	free(execve_prerror_s);
+	free(bin_path);
+	exit(1);
+}
+
+void run_cmd(t_shell *shell, t_cmd cmd, int dest_fd)
 {
 //	char		*bin_path;
-	pid_t		pid;
-//	(void) bin_path;
-	(void) argc;
-	(void) argv;
-	(void) envp;
+	pid_t	pid;
+	char	*bin_path;
 	(void) dest_fd;
 
 	// dup (2?) 0
 
-	// bin_path = path_to_binary();
-
+	bin_path = path_to_binary(shell, cmd.argv[0]);
+	if (!bin_path)
+		bin_path = *cmd.argv;
 	pid = fork();
 	if (pid < 0)
-		exit(!ft_printf("ABANDON SHIP. ABANDON SHIP."));
+		exit(!!ft_printf("ABANDON SHIP. ABANDON SHIP."));
 	else if (!pid)
-	{
-		ft_printf("in child\n");
-		// execve();
-	}
+		exec(shell, &cmd, bin_path);
 	else
-	{	
-		ft_printf("in parent\n");
-		// waitpid();
-	}
+		wait(0);
+	free(bin_path);
 }

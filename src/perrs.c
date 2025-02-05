@@ -6,11 +6,11 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 17:37:51 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/04 11:54:41 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/05 12:44:42 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/pipex.h"
+#include "pipex.h"
 
 int	perr_titled(char *text)
 {
