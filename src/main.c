@@ -6,45 +6,45 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:29:52 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/05 22:33:48 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/10 20:59:17 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
+bool init_shell(t_shell *shell)
+{
+	char	**env;
+
+	env = shell->envp;
+	while (ft_strncmp(*env, "PATH=", 5))
+		env++;
+	if (!*env)
+		return (!perr("PLACEHOLDER ERR: PATH env not found\n"));
+	if (!*(env + 5))
+		return (!perr("PLACEHOLDER ERR: PATH env empty\n"));
+	shell->bin_paths = (*env + 5);
+	if (pipe(&shell->inpipe_read) || pipe(&shell->outpipe_read))
+		return (!perr("Pipe failure\n"));
+	return (1);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell shell;
-	t_cmd	cmd;
 
 	shell = (t_shell){
 		.argc = argc,
 		.argv = argv,
 		.envp = envp,
-		.bin_paths = NULL
+		.bin_paths = NULL,
+		.inpipe_read = -1,
+		.inpipe_write = -1,
+		.outpipe_read = -1,
+		.outpipe_write = -1
 	};
-
-	init_bin_paths(&shell);
-	
-	// if (!shell.bin_paths)
-	// Will it insta-error? Test reassigning $PATH?
-	
-	cmd = str_to_cmd(argv[1]);
-	if (!cmd.mergedc)
-	{
-		ft_printf("No command\n");
+	if (!init_shell(&shell))
 		return (1);
-	}
-	ft_printf("%s\n", path_to_binary(&shell, argv[1]));
-	run_cmd(&shell, cmd, 0);
-	ft_printf("Process survived :D\n");
-	// bool	here_doc_mode;
-	// here_doc_mode = (argc == 5 && ft_strncmp(argv[0], "here_doc", 9));
-	// if (!here_doc_mode && argc != 4)
-	// 	return (1);
-	// if (here_doc_mode)
-	// 	return (here_doc(&argv[1]));
-	// else
-	//  return (run_command());
-	//return (pipex(argc, argv, envp));
+	pipex(shell, argc, argv);
+	return (1);
 }

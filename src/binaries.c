@@ -6,27 +6,11 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 09:23:31 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/05 23:14:51 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/10 15:46:30 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-bool init_bin_paths(t_shell *shell)
-{
-	char	**env;
-
-	env = shell->envp;
-	while (ft_strncmp(*env, "PATH=", 5))
-		env++;
-	if (!*env)
-		return (!perr("PLACEHOLDER ERR: PATH env not found\n"));
-	if (!*(env + 5))
-		return (!perr("PLACEHOLDER ERR: PATH env empty\n"));
-	shell->bin_paths = (*env + 5);
-	return (1);
-}
-
 
 static void set_strchr_colon_and_strlen(char *str, char **strchr, int *storage)
 {
@@ -48,8 +32,8 @@ char *path_to_binary(t_shell *shell, char *bin)
 
 	paths = shell->bin_paths;
 	if (!paths || !*paths || !bin || !*bin)
-		return (NULL);
-	if (ft_strchr(bin, '/') || !access(bin, X_OK))
+		return (NULL); // HANDLE BETTER?
+	if (ft_strchr(bin, '/'))
 		return (ft_strdup(bin));
 	while (*paths)
 	{

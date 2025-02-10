@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:29:55 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/05 18:48:56 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/10 17:28:04 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,20 +35,19 @@ typedef	struct	s_shell
 	char	**argv;
 	char	**envp;
 	char	*bin_paths;
+	int		inpipe_read;
+	int		inpipe_write;
+	int		outpipe_read;
+	int		outpipe_write;
 }					t_shell;
 
-bool	init_bin_paths(t_shell *shell);
+int		pipex(t_shell shell, int argc, char **args);
+int		here_doc(t_shell shell, int argc, char **argv);
 
-int		pipex(int argc, char **args, char **envp);
-int		here_doc(char **args);
-
-void	run_cmd(t_shell *shell, t_cmd cmd, int dest_fd);
-t_cmd	str_to_cmd(char *arg);
-
+void	process_cmd(t_shell *shell, int input_fd, char *str, int output_fd);
 char	*path_to_binary(t_shell *shell, char *bin);
 
 bool	is_operator(char *arg);
 bool	free_str_arr(char **arr);
-size_t	len_until_chr(char *str, char chr);
 
 #endif

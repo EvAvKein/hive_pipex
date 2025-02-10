@@ -12,7 +12,7 @@
 
 #include "pipex.h"
 
-t_cmd str_to_cmd(char *str)
+static t_cmd	str_to_cmd(char *str)
 {
 	int		i;
 	char	**split;
@@ -33,10 +33,10 @@ t_cmd str_to_cmd(char *str)
 		free_str_arr(split);
 		return ((t_cmd){.mergedc = 0, .argc = 0, .argv = NULL});
 	}
-	return ((t_cmd){.mergedc = i, .argc = i, .argv = split});	
+	return ((t_cmd){.mergedc = i, .argc = i, .argv = split});
 }
 
-static void exec(t_shell *shell, t_cmd *cmd, char *bin_path)
+static void	exec(t_shell *shell, t_cmd *cmd, char *bin_path)
 {
 	char	*execve_prerror_s;
 
@@ -48,24 +48,25 @@ static void exec(t_shell *shell, t_cmd *cmd, char *bin_path)
 	exit(1);
 }
 
-void run_cmd(t_shell *shell, t_cmd cmd, int dest_fd)
+void process_cmd(t_shell *shell, int input_fd, char *str, int output_fd)
 {
-//	char		*bin_path;
+	t_cmd	cmd;
 	pid_t	pid;
 	char	*bin_path;
-	(void) dest_fd;
-
-	// dup (2?) 0
-
+	
+	cmd = str_to_cmd(str);
+	//ft_printf("input %i, cmd %s, output %i\n", input_fd, cmd.argv[0], output_fd);
 	bin_path = path_to_binary(shell, cmd.argv[0]);
 	if (!bin_path)
-		bin_path = *cmd.argv;
+		bin_path = cmd.argv[0];
 	pid = fork();
 	if (pid < 0)
-		exit(!!ft_printf("ABANDON SHIP. ABANDON SHIP."));
-	else if (!pid)
-		exec(shell, &cmd, bin_path);
-	else
-		wait(0);
-	free(bin_path);
+		exit(perr("ABANDON SHIP. ABANDON SHIP."));
+	if (pid)
+		return (free(bin_path));
+	if (dup2(input_fd, STDIN_FILENO) < 0 || dup2(output_fd, STDOUT_FILENO) < 0)
+		exit(perr("pipex: dup2 failure\n"));
+	close(input_fd);
+	close(output_fd);
+	exec(shell, &cmd, bin_path);
 }
