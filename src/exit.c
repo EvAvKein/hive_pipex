@@ -1,22 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   here_doc.c                                         :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/01 14:44:36 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/10 15:41:59 by ekeinan          ###   ########.fr       */
+/*   Created: 2025/02/12 10:25:58 by ekeinan           #+#    #+#             */
+/*   Updated: 2025/02/12 11:54:56 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	here_doc(t_shell shell, int argc, char **argv)
+int	clean(t_shell shell)
 {
-	(void) shell;
-	(void) argc;
-	(void) argv;
+	if (shell.inpipe_read > -1)
+		close(shell.inpipe_read);
+	if (shell.inpipe_write > -1)
+		close(shell.inpipe_write);
+	if (shell.outpipe_read > -1)
+		close(shell.outpipe_read);
+	if (shell.outpipe_write > -1)
+		close(shell.outpipe_write);
+	return (1);
+}
 
-	return (0);	
+int	clean_exit(t_shell shell, int exit_code)
+{
+	clean(shell);
+	exit(exit_code);
+	return (1);
 }
