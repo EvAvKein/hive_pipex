@@ -1,42 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*   ft_dprintf.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2224/11/14 15:00:24 by ekeinan           #+#    #+#             */
-/*   Updated: 2024/11/29 12:55:03 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/11 12:47:16 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "ft_dprintf.h"
 
-static void	convert(const char *str, va_list args, long long *print_count)
+static void	convert(int fd, char *str, va_list args, long long *print_count)
 {
 	str++;
 	if (!*str)
 		increase_print_count(-1, print_count);
 	else if (*str == '%')
-		increase_print_count(write(1, "%", 1), print_count);
+		increase_print_count(write(fd, "%", 1), print_count);
 	else if (*str == 'c')
-		print_char(va_arg(args, int), print_count);
+		print_char(fd, va_arg(args, int), print_count);
 	else if (*str == 's')
-		print_str(va_arg(args, char *), print_count);
+		print_str(fd, va_arg(args, char *), print_count);
 	else if (*str == 'p')
-		print_ptr(va_arg(args, uintptr_t), print_count);
+		print_ptr(fd, va_arg(args, uintptr_t), print_count);
 	else if (*str == 'd')
-		print_int(va_arg(args, int), print_count);
+		print_int(fd, va_arg(args, int), print_count);
 	else if (*str == 'i')
-		print_int(va_arg(args, int), print_count);
+		print_int(fd, va_arg(args, int), print_count);
 	else if (*str == 'u')
-		print_uint(va_arg(args, unsigned int), print_count);
+		print_uint(fd, va_arg(args, unsigned int), print_count);
 	else if (*str == 'x')
-		print_lowercase_hex(va_arg(args, unsigned int), print_count);
+		print_lowerhex(fd, va_arg(args, unsigned int), print_count);
 	else if (*str == 'X')
-		print_uppercase_hex(va_arg(args, unsigned int), print_count);
+		print_upperhex(fd, va_arg(args, unsigned int), print_count);
 	else
-		increase_print_count(write(1, --str, 2), print_count);
+		increase_print_count(write(fd, --str, 2), print_count);
 }
 
 static size_t	segment_length(const char *s)
@@ -50,7 +50,7 @@ static size_t	segment_length(const char *s)
 		return (ft_strlen(s));
 }
 
-static void	print(const char *format, va_list args, long long	*print_count)
+static void	print(int fd, char *format, va_list args, long long	*print_count)
 {
 	size_t	f_i;
 	size_t	cur_seg_len;
@@ -62,7 +62,7 @@ static void	print(const char *format, va_list args, long long	*print_count)
 			break ;
 		if (format[f_i] == '%')
 		{
-			convert(&format[f_i], args, print_count);
+			convert(fd, &format[f_i], args, print_count);
 			f_i += (2 - !format[f_i + 1]);
 			continue ;
 		}
@@ -72,7 +72,7 @@ static void	print(const char *format, va_list args, long long	*print_count)
 	}
 }
 
-int	ft_printf(const char *format, ...)
+int	ft_dprintf(int fd, const char *format, ...)
 {
 	va_list		args;
 	long long	print_count;
@@ -81,7 +81,7 @@ int	ft_printf(const char *format, ...)
 		return (-1);
 	print_count = 0;
 	va_start(args, format);
-	print(format, args, &print_count);
+	print(fd, (char *) format, args, &print_count);
 	va_end(args);
 	return (print_count);
 }

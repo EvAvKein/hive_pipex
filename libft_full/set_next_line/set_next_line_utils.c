@@ -1,16 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
+/*   set_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 19:21:17 by ekeinan           #+#    #+#             */
-/*   Updated: 2024/12/12 16:55:38 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/11 15:45:36 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line_bonus.h"
+#include "set_next_line.h"
+
+bool	set_str_and_return(char **str_ptr, char *str, bool return_bool)
+{
+	*str_ptr = str;
+	return (return_bool);
+}
 
 size_t	ft_strlen_until_nl(char *s, ssize_t *nl_i)
 {

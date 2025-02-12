@@ -6,48 +6,56 @@
 #    By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/11 09:31:47 by ekeinan           #+#    #+#              #
-#    Updated: 2024/12/20 17:59:44 by ekeinan          ###   ########.fr        #
+#    Updated: 2025/02/11 15:49:52 by ekeinan          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = libft_full.a
-LIB = libft.a
+NAME := libft_full.a
 
-SRC = ft_printf.c \
-	  increase_print_count.c \
-	  print_chars.c \
-	  print_int.c \
-	  print_ptr.c \
-	  print_hex.c \
-	  get_next_line_bonus.c \
-      get_next_line_utils_bonus.c
+LIBBASE_DIR := libft
+LIBBASE_FILE := libft.a
+LIBBASE_PATH := $(LIBBASE_DIR)/$(LIBBASE_FILE)
 
-OBJ = $(SRC:.c=.o)
+DPRINTF_DIR := ft_dprintf
+DPRINTF_SRC := ft_dprintf.c \
+			   increase_print_count.c \
+			   print_chars.c \
+			   print_int.c \
+			   print_ptr.c \
+			   print_hex.c
+DPRINTF_OBJ := $(DPRINTF_SRC:%.c=$(DPRINTF_DIR)/%.o)
 
-COMPILE_FLAGS = -Wall -Wextra -Werror
+SET_NEXT_LINE_DIR := set_next_line
+SET_NEXT_LINE_SRC := set_next_line.c \
+		  			 set_next_line_utils.c
+SET_NEXT_LINE_OBJ := $(SET_NEXT_LINE_SRC:%.c=$(SET_NEXT_LINE_DIR)/%.o)
+
+COMPILE_FLAGS := -Wall -Wextra -Werror -I$(LIBBASE_FILE)
 
 all: $(NAME)
 
 %.o: %.c
 	cc $(COMPILE_FLAGS) -c $< -o $@
+		
+$(LIBBASE_PATH):
+	@make bonus -C $(LIBBASE_DIR) --no-print-directory
 
-$(NAME): $(OBJ) $(LIB)
-	@mv $(LIB) $(NAME)
-	ar -rcs $(NAME) $(OBJ)
-
-$(LIB):
-	@make bonus -C ./libft
-	cp ./libft/$(LIB) ./
+$(NAME): $(DPRINTF_OBJ) $(SET_NEXT_LINE_OBJ) $(LIBBASE_PATH)
+	@cp $(LIBBASE_PATH) $(NAME)
+	ar -rcs $(NAME) $(DPRINTF_OBJ) $(SET_NEXT_LINE_OBJ)
 
 clean:
-	@cd libft && make $@
-	rm -f $(OBJ)
+	@make -C $(LIBBASE_DIR) $@ --no-print-directory
+	rm -f $(DPRINTF_OBJ) $(SET_NEXT_LINE_OBJ)
 
 fclean: clean
-	@cd libft && make $@
+	@make -C $(LIBBASE_DIR) $@ --no-print-directory
 	rm -f $(NAME)
 
 re: fclean all
-	@cd libft && make $@
+	@make -C $(LIBBASE_DIR) $@ --no-print-directory
 
-.PHONY: all bonus clean fclean re
+neat: $(NAME) clean
+	clear
+
+.PHONY: all clean fclean re

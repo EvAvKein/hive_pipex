@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
+/*   set_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 19:26:47 by ekeinan           #+#    #+#             */
-/*   Updated: 2024/11/29 11:28:36 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/11 17:04:15 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line_bonus.h"
+#include "set_next_line.h"
 
 static void	move_to_start(char *s, size_t start_i)
 {
@@ -33,23 +33,28 @@ static void	reset_buffer(char *buffer, ssize_t *buffer_nl_i)
 		ft_bzero(buffer, BUFFER_SIZE);
 }
 
-static int	initialize_line(char **line, char *buffer, ssize_t *buffer_nl_i)
+static bool	init_data(t_line_data *data, char **line_ptr, char *buffer, int fd)
 {
-	if (*buffer)
+	*data = (t_line_data){.line_ptr = line_ptr, .line = NULL,
+		.buffer = buffer, .buffer_nl_i = -1};
+	if (BUFFER_SIZE < 1 || FILES_CAPACITY < 1
+		|| fd > FILES_CAPACITY - 1 || fd < 0)
+		return (set_str_and_return(data->line_ptr, NULL, 0));
+	if (*data->buffer)
 	{
-		*line = ft_strdup_until_nl(buffer, buffer_nl_i);
-		if (!*line)
-			return (0);
-		reset_buffer(buffer, buffer_nl_i);
+		data->line = ft_strdup_until_nl(data->buffer, &data->buffer_nl_i);
+		if (!*data->line)
+			return (set_str_and_return(data->line_ptr, data->line, 0));
+		reset_buffer(data->buffer, &data->buffer_nl_i);
 	}
 	else
 	{
-		*line = malloc(sizeof(char));
-		if (!*line)
-			return (0);
-		*line[0] = 0;
+		data->line = malloc(sizeof(char));
+		if (!*data->line)
+			return (set_str_and_return(data->line_ptr, data->line, 0));
+		data->line[0] = '\0';
 	}
-	return (1);
+	return (set_str_and_return(data->line_ptr, data->line, 1));
 }
 
 static int	append_to_line(char **line, char *buffer, ssize_t *buffer_nl_i)
@@ -81,31 +86,31 @@ static int	append_to_line(char **line, char *buffer, ssize_t *buffer_nl_i)
 	return (1);
 }
 
-char	*get_next_line(int fd)
+bool	set_next_line(int fd, char **line_ptr)
 {
 	static char		buffers[FILES_CAPACITY][BUFFER_SIZE + 1];
-	ssize_t			buffer_nl_i;
-	char			*line;
+	t_line_data		data;
 
-	buffer_nl_i = -1;
-	if (BUFFER_SIZE < 1 || FILES_CAPACITY < 1 || fd > FILES_CAPACITY - 1
-		|| fd < 0 || !initialize_line(&line, buffers[fd], &buffer_nl_i))
-		return (NULL);
-	if (buffer_nl_i >= 0)
-		return (line);
+	if (!init_data(&data, line_ptr, buffers[fd], fd))
+		return (set_str_and_return(line_ptr, NULL, 0));
+	if (data.buffer_nl_i >= 0)
+		return (set_str_and_return(line_ptr, data.line, 1));
 	while (1)
 	{
-		if (!buffers[fd][0] && read(fd, buffers[fd], BUFFER_SIZE) < 1)
+		if (!buffers[fd][0])
 		{
-			if (line[0])
-				return (line);
-			free(line);
-			return (NULL);
+			data.read_return = read(fd, buffers[fd], BUFFER_SIZE);
+			if (data.read_return < 0)
+				return (set_str_and_return(line_ptr, data.line, 0));
+			if (!data.read_return && *data.line)
+				return (set_str_and_return(line_ptr, data.line, 1));
+			free(data.line);
+			return (set_str_and_return(line_ptr, NULL, 1));
 		}
-		if (!append_to_line(&line, buffers[fd], &buffer_nl_i))
+		if (!append_to_line(&data.line, buffers[fd], &data.buffer_nl_i))
 			return (NULL);
-		reset_buffer(buffers[fd], &buffer_nl_i);
-		if (buffer_nl_i >= 0)
-			return (line);
+		reset_buffer(buffers[fd], &data.buffer_nl_i);
+		if (data.buffer_nl_i >= 0)
+			return (data.line);
 	}
 }

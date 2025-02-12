@@ -6,14 +6,14 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 16:32:42 by ekeinan           #+#    #+#             */
-/*   Updated: 2024/12/12 16:34:14 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/12 10:37:15 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_FULL_H
 # define LIBFT_FULL_H
 
-# include "ft_printf.h"
-# include "get_next_line_bonus.h"
+# include "ft_dprintf/ft_dprintf.h"
+# include "set_next_line/set_next_line.h"
 
 #endif
