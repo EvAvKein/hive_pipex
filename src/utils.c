@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 17:28:55 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/12 11:54:09 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/13 10:12:56 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,4 +24,9 @@ bool free_str_arr(char **arr)
 	}
 	free(arr);
 	return (1);
+}
+
+int	if_either(int first, int second)
+{
+	return (first || second);
 }

@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:29:55 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/12 17:49:50 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/13 14:12:12 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,12 @@
 # include "../libft_full/libft_full.h"
 # include "perrs.h"
 
-
 typedef	struct	s_cmd
 {
 	int		in_fd;
 	int		out_fd;
 	char 	*str;
-	
-}					t_cmd;
+}			t_cmd;
 
 typedef	struct	s_shell
 {
@@ -41,12 +39,16 @@ typedef	struct	s_shell
 	int		inpipe_write;
 	int		outpipe_read;
 	int		outpipe_write;
-}					t_shell;
+}			t_shell;
 
 void	process_cmd(t_shell *shell, t_cmd cmd, int close_fd);
 char	*path_to_binary(t_shell *shell, char *bin);
 
+bool	run_first_cmd(t_shell *shell);
+bool	run_last_cmd_and_wait_all(t_shell *shell);
+
 bool	free_str_arr(char **arr);
+int		if_either(int first, int second);
 
 int		clean(t_shell shell);
 int		clean_exit(t_shell shell, int exit_code);

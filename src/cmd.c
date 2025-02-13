@@ -22,7 +22,7 @@ static char **str_to_argv(char *str)
 	split = ft_split(str, ' ');
 	if (!split)
 	{
-		perrno("Command parsing", ENOMEM);
+		pipex_arg_errno("command parsing");
 		return (NULL);
 	}
 	i = 0;
@@ -42,12 +42,11 @@ static void	exec(t_shell *shell, char **cmd, char *bin_path)
 
 	execve(bin_path, cmd, shell->envp);
 	errstring = strerror(errno);
-	ft_dprintf(STDERR_FILENO, "pipex: %s: %s", bin_path, errstring);
+	pipex_arg_errno(cmd[0]);
 	if (cmd)
 		free_str_arr(cmd);
-	free(errstring);
 	free(bin_path);
-	clean_exit(*shell, errno); // CODE FOR EXEC FAILURE?
+	clean_exit(*shell, 1);
 }
 
 void process_cmd(t_shell *shell, t_cmd cmd, int child_close_fd)
@@ -56,21 +55,57 @@ void process_cmd(t_shell *shell, t_cmd cmd, int child_close_fd)
 	pid_t	pid;
 	char	*bin_path;
 	
-	//ft_printf("input %i, cmd %s, output %i\n", input_fd, cmd.argv[0], output_fd);
 	pid = fork();
 	if (pid < 0)
-		clean_exit(*shell, errno + !perr("pipex: fork failure\n"));
+		clean_exit(*shell, !!pipex_arg_errno(cmd.str));
 	if (pid)
 		return ;
 	if (dup2(cmd.in_fd, STDIN_FILENO) < 0
 		|| dup2(cmd.out_fd, STDOUT_FILENO) < 0)
-		clean_exit(*shell, errno + !perr("pipex: dup2 failure\n"));
-	close(cmd.in_fd);
-	close(cmd.out_fd);
-	close(child_close_fd);
+		clean_exit(*shell, !!pipex_arg_errno(cmd.str));
+	if (if_either(close(cmd.in_fd),
+		if_either(close(cmd.out_fd), close(child_close_fd))))
+		clean_exit(*shell, !!pipex_arg_errno(cmd.str));
 	cmd_argv = str_to_argv(cmd.str);
+	if (!cmd_argv)
+		clean_exit(*shell, !!pipex_arg_errno("command parsing"));
 	bin_path = path_to_binary(shell, cmd_argv[0]);
 	if (!bin_path)
 		bin_path = cmd_argv[0];
 	exec(shell, cmd_argv, bin_path);
+}
+
+bool	run_first_cmd(t_shell *shell)
+{
+	int	infile;
+
+	infile = open(shell->argv[1], O_RDONLY);
+	if (infile < 0)
+		return (!pipex_arg_errno(shell->argv[1]));
+	process_cmd(shell, (t_cmd){.in_fd = infile, .out_fd = shell->outpipe_write,
+		.str = shell->argv[2]}, shell->outpipe_read);
+	if (close(infile))
+		return (!pipex_arg_errno(shell->argv[1]));
+	return (1);
+}
+
+bool	run_last_cmd_and_wait_all(t_shell *shell)
+{
+	int	outfile;
+	int cmd_count;
+	
+	cmd_count = shell->argc - 3;
+	outfile = open(shell->argv[cmd_count + 2], O_WRONLY | O_CREAT | O_TRUNC,
+		0644);
+	if (outfile < 0)
+		return (!pipex_arg_errno(shell->argv[cmd_count + 2]));
+	process_cmd(shell, (t_cmd){.in_fd = shell->outpipe_read, .out_fd = outfile,
+		.str = shell->argv[cmd_count + 1]}, shell->outpipe_write);
+	if (if_either(close(shell->outpipe_read), close(shell->outpipe_write)))
+		return (!pipex_arg_errno("pipe closing"));
+	while (cmd_count--)
+		wait(NULL);
+	if (close(outfile))
+		return (!pipex_arg_errno(shell->argv[shell->argc - 1]));
+	return (1);
 }

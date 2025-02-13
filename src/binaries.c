@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 09:23:31 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/10 15:46:30 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/13 14:46:24 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,15 @@ char *path_to_binary(t_shell *shell, char *bin)
 
 	paths = shell->bin_paths;
 	if (!paths || !*paths || !bin || !*bin)
-		return (NULL); // HANDLE BETTER?
+		return (NULL);
 	if (ft_strchr(bin, '/'))
 		return (ft_strdup(bin));
 	while (*paths)
 	{
 		set_strchr_colon_and_strlen(paths, &next_colon, &path_len);
 		file_path = ft_calloc(path_len + bin_len + 2, sizeof(char));
-		if (!file_path)
-			perrno("Binary lookup", ENOMEM);
+		if (!file_path && pipex_arg_errno("binary lookup"))
+			return (NULL);
 		((char *)ft_memcpy(file_path, paths, path_len))[path_len] = '/';
 		ft_memcpy(file_path + path_len + 1, bin, bin_len);
 		if (!access(file_path, X_OK))

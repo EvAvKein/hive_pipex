@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 17:37:51 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/05 12:44:42 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/13 10:55:25by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,8 @@ int	perr(char *text)
 	return (1);
 }
 
-int	perrno(char *precolon, int errnum)
+int	pipex_arg_errno(char *arg)
 {
-	char	*str;
-
-	str = strerror(errnum);
-	if (str)
-	{
-		perr(precolon);
-		write(2, ": ", 2);
-		perr(str);
-		free(str);
-	}
+	ft_dprintf(STDERR_FILENO, "pipex: %s: %s\n", arg, strerror(errno));
 	return (1);
 }
