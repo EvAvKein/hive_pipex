@@ -6,13 +6,13 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 17:28:55 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/13 10:12:56 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/14 08:35:15 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-bool free_str_arr(char **arr)
+bool	free_str_arr(char **arr)
 {
 	size_t	i;
 

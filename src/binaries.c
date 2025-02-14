@@ -6,23 +6,22 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 09:23:31 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/13 14:46:24 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/14 08:35:44 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static void set_strchr_colon_and_strlen(char *str, char **strchr, int *storage)
+static void	set_strchr_colon_and_strlen(char *str, char **strchr, int *storage)
 {
 	*strchr = ft_strchr(str, ':');
 	if (*strchr)
 		*storage = *strchr - str;
 	else
 		*storage = ft_strlen(str);
-	
 }
 
-char *path_to_binary(t_shell *shell, char *bin)
+char	*path_to_binary(t_shell *shell, char *bin)
 {
 	char		*paths;
 	char		*next_colon;

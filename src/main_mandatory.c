@@ -6,13 +6,13 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:44:22 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/13 14:27:44 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/14 08:36:26 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static bool init_shell(t_shell *shell, int argc, char **argv, char **envp)
+static bool	init_shell(t_shell *shell, int argc, char **argv, char **envp)
 {
 	char	**env;
 
@@ -42,7 +42,7 @@ static bool init_shell(t_shell *shell, int argc, char **argv, char **envp)
 static int	pipex(t_shell shell, char **argv)
 {
 	int	infile;
-	int outfile;
+	int	outfile;
 
 	infile = open(argv[1], O_RDONLY);
 	if (infile < 0)
@@ -63,12 +63,12 @@ static int	pipex(t_shell shell, char **argv)
 	if (close(outfile))
 		return (pipex_arg_errno(argv[4]));
 	clean_exit(shell, 0);
-	return (-1u+1);
+	return (-1u + 1);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_shell shell;
+	t_shell	shell;
 
 	if (!init_shell(&shell, argc, argv, envp))
 		return (1);

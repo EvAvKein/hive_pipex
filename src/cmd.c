@@ -6,13 +6,13 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 21:15:03 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/05 14:47:22by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/14 08:35:02 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static char **str_to_argv(char *str)
+static char	**str_to_argv(char *str)
 {
 	int		i;
 	char	**split;
@@ -49,12 +49,12 @@ static void	exec(t_shell *shell, char **cmd, char *bin_path)
 	clean_exit(*shell, 1);
 }
 
-void process_cmd(t_shell *shell, t_cmd cmd, int child_close_fd)
+void	process_cmd(t_shell *shell, t_cmd cmd, int child_close_fd)
 {
 	char	**cmd_argv;
 	pid_t	pid;
 	char	*bin_path;
-	
+
 	pid = fork();
 	if (pid < 0)
 		clean_exit(*shell, !!pipex_arg_errno(cmd.str));
@@ -64,7 +64,7 @@ void process_cmd(t_shell *shell, t_cmd cmd, int child_close_fd)
 		|| dup2(cmd.out_fd, STDOUT_FILENO) < 0)
 		clean_exit(*shell, !!pipex_arg_errno(cmd.str));
 	if (if_either(close(cmd.in_fd),
-		if_either(close(cmd.out_fd), close(child_close_fd))))
+			if_either(close(cmd.out_fd), close(child_close_fd))))
 		clean_exit(*shell, !!pipex_arg_errno(cmd.str));
 	cmd_argv = str_to_argv(cmd.str);
 	if (!cmd_argv)
@@ -92,11 +92,11 @@ bool	run_first_cmd(t_shell *shell)
 bool	run_last_cmd_and_wait_all(t_shell *shell)
 {
 	int	outfile;
-	int cmd_count;
-	
+	int	cmd_count;
+
 	cmd_count = shell->argc - 3;
 	outfile = open(shell->argv[cmd_count + 2], O_WRONLY | O_CREAT | O_TRUNC,
-		0644);
+			0644);
 	if (outfile < 0)
 		return (!pipex_arg_errno(shell->argv[cmd_count + 2]));
 	process_cmd(shell, (t_cmd){.in_fd = shell->outpipe_read, .out_fd = outfile,

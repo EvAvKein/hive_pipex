@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:29:55 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/13 14:12:12 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/14 08:37:25 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@
 # include "../libft_full/libft_full.h"
 # include "perrs.h"
 
-typedef	struct	s_cmd
+typedef struct s_cmd
 {
 	int		in_fd;
 	int		out_fd;
-	char 	*str;
+	char	*str;
 }			t_cmd;
 
-typedef	struct	s_shell
+typedef struct s_shell
 {
 	int		argc;
 	char	**argv;
