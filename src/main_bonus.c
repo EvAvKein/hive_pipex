@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:44:22 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/17 14:20:28 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/17 14:41:47 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	pipex(t_shell shell, int argc, char **argv)
 	return (clean_exit(shell, 0));
 }
 
-static bool init_shell(t_shell *shell, int argc, char **argv, char **envp)
+static bool	init_shell(t_shell *shell, int argc, char **argv, char **envp)
 {
 	char	**env;
 
@@ -79,7 +79,7 @@ static bool init_shell(t_shell *shell, int argc, char **argv, char **envp)
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_shell shell;
+	t_shell	shell;
 
 	if (!init_shell(&shell, argc, argv, envp))
 		return (1);

@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:44:22 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/17 14:18:41 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/17 14:41:28 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,14 @@ static int	pipex(t_shell shell, char **argv)
 	if (infile < 0)
 		return (!pipex_arg_errno(argv[1]));
 	process_cmd(&shell, (t_cmd){.in_fd = infile, .out_fd = shell.outpipe_write,
-		.str = argv[2]}, (int[2]){shell.outpipe_read, -1});
+		.str = argv[2]}, (int [2]){shell.outpipe_read, -1});
 	if (close(infile))
 		return (!pipex_arg_errno(argv[1]));
 	outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (outfile < 0)
 		return (!pipex_arg_errno(argv[4]));
 	process_cmd(&shell, (t_cmd){.in_fd = shell.outpipe_read, .out_fd = outfile,
-		.str = argv[3]}, (int[2]){shell.outpipe_write, -1});
+		.str = argv[3]}, (int [2]){shell.outpipe_write, -1});
 	if (close_until_negative((int [3]){shell.outpipe_read, shell.outpipe_write,
 			-1}))
 		return (!pipex_arg_errno("pipe closing"));

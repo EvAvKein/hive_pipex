@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 14:21:09 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/17 14:36:26 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/17 14:42:14 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ bool	heredoc_run_last_cmd_and_wait_all(t_shell *shell, bool heredoc)
 	process_cmd(shell, (t_cmd){.in_fd = shell->outpipe_read, .out_fd = outfile,
 		.str = shell->argv[cmd_count + 1]},
 		(int [4]){shell->outpipe_write, shell->inpipe_read,
-			shell->inpipe_write, -1});
+		shell->inpipe_write, -1});
 	if (close_until_negative((int [5]){shell->inpipe_read, shell->inpipe_write,
 			shell->outpipe_read, shell->outpipe_write, -1}))
 		return (!pipex_arg_errno("pipe closing"));

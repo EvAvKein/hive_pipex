@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 21:15:03 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/17 14:33:03 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/17 14:40:31 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	process_cmd(t_shell *shell, t_cmd cmd, int *fds_close_until_negative)
 		|| dup2(cmd.out_fd, STDOUT_FILENO) < 0
 		|| if_either(
 			close_until_negative((int [3]){cmd.in_fd, cmd.out_fd, -1}),
-			close_until_negative(fds_close_until_negative)))
+		close_until_negative(fds_close_until_negative)))
 		clean_exit(*shell, !!pipex_arg_errno(cmd.str));
 	cmd_argv = str_to_argv(cmd.str);
 	if (!cmd_argv)

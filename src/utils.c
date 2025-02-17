@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 17:28:55 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/17 14:10:25 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/17 14:40:55 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,13 @@ bool	if_either(int first, int second)
 
 bool	close_until_negative(int *fds)
 {
-	bool  any_failed;
-	
+	bool	any_failed;
+
 	any_failed = 0;
 	while (*fds >= 0)
 	{
 		any_failed = (close(*fds) < 0) || any_failed;
-		fds++;	
+		fds++;
 	}
 	return (any_failed);
 }
