@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:29:55 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/14 08:37:25 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/17 14:09:56 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,15 @@ typedef struct s_shell
 	int		outpipe_write;
 }			t_shell;
 
-void	process_cmd(t_shell *shell, t_cmd cmd, int close_fd);
+void	process_cmd(t_shell *shell, t_cmd cmd, int *two_remaining_fds);
 char	*path_to_binary(t_shell *shell, char *bin);
 
 bool	run_first_cmd(t_shell *shell);
 bool	run_last_cmd_and_wait_all(t_shell *shell);
 
 bool	free_str_arr(char **arr);
-int		if_either(int first, int second);
+bool	if_either(int first, int second);
+bool	close_until_negative(int *fds);
 
 int		clean(t_shell shell);
 int		clean_exit(t_shell shell, int exit_code);

@@ -1,27 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   here_doc.c                                         :+:      :+:    :+:   */
+/*   pipex_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/13 14:21:09 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/13 14:23:47 by ekeinan          ###   ########.fr       */
+/*   Created: 2025/02/17 10:49:56 by ekeinan           #+#    #+#             */
+/*   Updated: 2025/02/17 11:20:46 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#ifndef PIPEX_BONUS_H
+# define PIPEX_BONUS_H
 
-bool	run_first_cmd_heredoc(t_shell *shell)
-{
-	int	infile;
+# include "pipex.h"
 
-	infile = open(shell->argv[2], O_RDONLY);
-	if (infile < 0)
-		return (!pipex_arg_errno(shell->argv[1]));
-	process_cmd(shell, (t_cmd){.in_fd = infile, .out_fd = shell->outpipe_write,
-		.str = shell->argv[2]}, shell->outpipe_read);
-	if (close(infile))
-		return (!pipex_arg_errno(shell->argv[1]));
-	return (1);
-}
+bool	heredoc_run_first_cmd(t_shell *shell);
+bool	heredoc_run_last_cmd_and_wait_all(t_shell *shell, bool heredoc);
+void	cycle_pipes(t_shell *shell);
+
+#endif

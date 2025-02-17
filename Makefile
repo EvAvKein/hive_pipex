@@ -6,7 +6,7 @@
 #    By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/11 09:31:47 by ekeinan           #+#    #+#              #
-#    Updated: 2025/02/12 16:23:18 by ekeinan          ###   ########.fr        #
+#    Updated: 2025/02/17 14:33:47 by ekeinan          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ SRC_MAND_FILES := main_mandatory.c \
 				  perrs.c
 
 SRC_BONUS_FILES := main_bonus.c \
+				   heredoc_bonus.c \
 				   cmd.c \
 				   binaries.c \
 				   exit.c \
@@ -61,7 +62,7 @@ clean:
 
 fclean: clean
 	@make -C $(LIBFT_DIR) $@ --no-print-directory
-	rm -rf $(NAME)
+	rm -f $(NAME) $(BONUS_NAME)
 
 re: fclean all
 

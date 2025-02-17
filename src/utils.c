@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 17:28:55 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/14 08:35:15 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/17 14:10:25 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,32 @@ bool	free_str_arr(char **arr)
 	return (1);
 }
 
-int	if_either(int first, int second)
+void	cycle_pipes(t_shell *shell)
+{
+	int		swap;
+
+	swap = shell->inpipe_read;
+	shell->inpipe_read = shell->outpipe_read;
+	shell->outpipe_read = swap;
+	swap = shell->inpipe_write;
+	shell->inpipe_write = shell->outpipe_write;
+	shell->outpipe_write = swap;
+}
+
+bool	if_either(int first, int second)
 {
 	return (first || second);
+}
+
+bool	close_until_negative(int *fds)
+{
+	bool  any_failed;
+	
+	any_failed = 0;
+	while (*fds >= 0)
+	{
+		any_failed = (close(*fds) < 0) || any_failed;
+		fds++;	
+	}
+	return (any_failed);
 }
