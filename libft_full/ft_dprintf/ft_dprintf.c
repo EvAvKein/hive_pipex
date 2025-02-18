@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2224/11/14 15:00:24 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/11 12:47:16 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/18 10:36:01 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static void	print(int fd, char *format, va_list args, long long	*print_count)
 			continue ;
 		}
 		cur_seg_len = segment_length(&format[f_i]);
-		increase_print_count(write(1, &format[f_i], cur_seg_len), print_count);
+		increase_print_count(write(fd, &format[f_i], cur_seg_len), print_count);
 		f_i += cur_seg_len;
 	}
 }

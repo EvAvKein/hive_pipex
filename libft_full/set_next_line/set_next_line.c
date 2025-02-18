@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 19:26:47 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/11 17:04:15 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/18 11:29:57 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,18 +43,20 @@ static bool	init_data(t_line_data *data, char **line_ptr, char *buffer, int fd)
 	if (*data->buffer)
 	{
 		data->line = ft_strdup_until_nl(data->buffer, &data->buffer_nl_i);
-		if (!*data->line)
+		if (!data->line)
 			return (set_str_and_return(data->line_ptr, data->line, 0));
 		reset_buffer(data->buffer, &data->buffer_nl_i);
+		return (set_str_and_return(data->line_ptr, data->line, 1));
 	}
 	else
 	{
 		data->line = malloc(sizeof(char));
-		if (!*data->line)
+		if (!data->line)
 			return (set_str_and_return(data->line_ptr, data->line, 0));
 		data->line[0] = '\0';
+		*line_ptr = data->line;
+		return (1);
 	}
-	return (set_str_and_return(data->line_ptr, data->line, 1));
 }
 
 static int	append_to_line(char **line, char *buffer, ssize_t *buffer_nl_i)
@@ -102,15 +104,13 @@ bool	set_next_line(int fd, char **line_ptr)
 			data.read_return = read(fd, buffers[fd], BUFFER_SIZE);
 			if (data.read_return < 0)
 				return (set_str_and_return(line_ptr, data.line, 0));
-			if (!data.read_return && *data.line)
+			if (!data.read_return)
 				return (set_str_and_return(line_ptr, data.line, 1));
-			free(data.line);
-			return (set_str_and_return(line_ptr, NULL, 1));
 		}
 		if (!append_to_line(&data.line, buffers[fd], &data.buffer_nl_i))
-			return (NULL);
+			return (set_str_and_return(line_ptr, NULL, 1));
 		reset_buffer(buffers[fd], &data.buffer_nl_i);
 		if (data.buffer_nl_i >= 0)
-			return (data.line);
+			return (set_str_and_return(line_ptr, data.line, 1));
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 19:21:17 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/11 15:45:36 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/18 10:56:47 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 
 bool	set_str_and_return(char **str_ptr, char *str, bool return_bool)
 {
+	if (str && !*str)
+	{
+		free(str);
+		str = NULL;
+	}
 	*str_ptr = str;
 	return (return_bool);
 }
