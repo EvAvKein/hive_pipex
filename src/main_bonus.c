@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:44:22 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/17 14:41:47 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/18 10:32:23 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	main(int argc, char **argv, char **envp)
 
 	if (!init_shell(&shell, argc, argv, envp))
 		return (1);
-	if (!strncmp(argv[1], "here_doc", 9))
+	if (!ft_strncmp(argv[1], "here_doc", 9))
 		here_doc(shell, argc, argv);
 	else if (argc >= 5)
 		pipex(shell, argc, argv);

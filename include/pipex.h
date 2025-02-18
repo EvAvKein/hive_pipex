@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:29:55 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/17 14:09:56 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/17 16:52:07 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ bool	run_last_cmd_and_wait_all(t_shell *shell);
 bool	free_str_arr(char **arr);
 bool	if_either(int first, int second);
 bool	close_until_negative(int *fds);
+bool	cmd_is_empty_or_dir(char *cmd_str);
 
 int		clean(t_shell shell);
 int		clean_exit(t_shell shell, int exit_code);

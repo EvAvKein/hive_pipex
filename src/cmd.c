@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 21:15:03 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/17 14:40:31 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/18 10:28:54 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,13 @@ static char	**str_to_argv(char *str)
 	return (split);
 }
 
-static void	exec(t_shell *shell, char **cmd, char *bin_path)
+static void	exec(t_shell *shell, char **cmd_argv, char *bin_path)
 {
-	char	*errstring;
-
-	execve(bin_path, cmd, shell->envp);
-	errstring = strerror(errno);
-	pipex_arg_errno(cmd[0]);
-	if (cmd)
-		free_str_arr(cmd);
-	free(bin_path);
+	execve(bin_path, cmd_argv, shell->envp);
+	pipex_arg_errno(cmd_argv[0]);
+	if (cmd_argv[0] != bin_path)
+		free(bin_path);
+	free_str_arr(cmd_argv);
 	clean_exit(*shell, 1);
 }
 
@@ -60,10 +57,13 @@ void	process_cmd(t_shell *shell, t_cmd cmd, int *fds_close_until_negative)
 		clean_exit(*shell, !!pipex_arg_errno(cmd.str));
 	if (pid)
 		return ;
+	if (cmd_is_empty_or_dir(cmd.str))
+		clean_exit(*shell, 1);
 	if (dup2(cmd.in_fd, STDIN_FILENO) < 0
 		|| dup2(cmd.out_fd, STDOUT_FILENO) < 0
 		|| if_either(
 			close_until_negative((int [3]){cmd.in_fd, cmd.out_fd, -1}),
+		// don't close in & out FDs? when do i do that then???
 		close_until_negative(fds_close_until_negative)))
 		clean_exit(*shell, !!pipex_arg_errno(cmd.str));
 	cmd_argv = str_to_argv(cmd.str);

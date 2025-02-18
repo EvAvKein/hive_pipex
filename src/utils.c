@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 17:28:55 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/17 14:40:55 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/18 14:53:02 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,17 @@ bool	close_until_negative(int *fds)
 		fds++;
 	}
 	return (any_failed);
+}
+
+bool	cmd_is_empty_or_dir(char *cmd_str)
+{
+	int	dir_fd;
+
+	if (!*cmd_str)
+		return (1);
+	dir_fd = open(cmd_str, __O_DIRECTORY);
+	if (dir_fd < 0)
+		return (0);
+	close(dir_fd);
+	return (1);
 }

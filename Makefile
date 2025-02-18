@@ -6,7 +6,7 @@
 #    By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/11 09:31:47 by ekeinan           #+#    #+#              #
-#    Updated: 2025/02/17 14:33:47 by ekeinan          ###   ########.fr        #
+#    Updated: 2025/02/17 15:17:04 by ekeinan          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,7 @@ INCLUDE_DIR := include
 INCLUDE_FILES := pipex.h \
 				 perrs.h
 
-COMPILE_FLAGS := -Wall -Wextra -Werror -I$(INCLUDE_DIR)
+COMPILE_FLAGS := -Wall -Wextra -Werror -I$(INCLUDE_DIR) -g
 
 OBJ_MAND := $(SRC_MAND_FILES:%.c=$(SRC_DIR)/%.o)
 OBJ_BONUS := $(SRC_BONUS_FILES:%.c=$(SRC_DIR)/%.o)
