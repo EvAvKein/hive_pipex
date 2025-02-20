@@ -12,6 +12,19 @@
 
 #include "pipex.h"
 
+int close_unless_pipe(t_shell *shell, int fd)
+{
+	t_shell	sh;
+
+	sh = *shell;
+	if (fd != sh.inpipe_read
+			&& fd != sh.inpipe_write	
+			&& fd != sh.outpipe_read
+			&& fd != sh.outpipe_write)
+		return (close(fd));
+	return (0);
+}
+
 int	clean(t_shell shell)
 {
 	if (shell.inpipe_read > -1)

@@ -18,6 +18,26 @@ static int	here_doc(t_shell shell, int argc, char **argv)
 
 	if (!heredoc_run_first_cmd(&shell))
 		return (clean_exit(shell, 1));
+	i = 4;
+	while (i < argc - 2)
+	{
+		process_cmd(&shell, (t_cmd){.in_fd = shell.inpipe_read,
+			.out_fd = shell.outpipe_write, .str = argv[i++]},
+			(int [3]){shell.inpipe_write, shell.outpipe_read, -1});
+		cycle_pipes(&shell);
+	}
+	if (!run_last_cmd_and_wait_all(&shell, 1))
+		return (clean_exit(shell, 1));
+	return (clean_exit(shell, 0));
+}
+
+
+static int	pipex(t_shell shell, int argc, char **argv)
+{
+	int	i;
+
+	if (!pipex_run_first_cmd(&shell))
+		return (clean_exit(shell, 1));
 	i = 3;
 	while (i < argc - 2)
 	{
@@ -26,26 +46,7 @@ static int	here_doc(t_shell shell, int argc, char **argv)
 			(int [3]){shell.inpipe_write, shell.outpipe_read, -1});
 		cycle_pipes(&shell);
 	}
-	if (!heredoc_run_last_cmd_and_wait_all(&shell, 1))
-		return (clean_exit(shell, 1));
-	return (clean_exit(shell, 0));
-}
-
-static int	pipex(t_shell shell, int argc, char **argv)
-{
-	int	i;
-
-	if (!(run_first_cmd(&shell)))
-		return (clean_exit(shell, 1));
-	i = 3;
-	while (i < argc - 2)
-	{
-		cycle_pipes(&shell);
-		process_cmd(&shell, (t_cmd){.in_fd = shell.inpipe_read,
-			.str = argv[i++], .out_fd = shell.outpipe_write},
-			(int [3]){shell.inpipe_write, shell.outpipe_read, -1});
-	}
-	if (!heredoc_run_last_cmd_and_wait_all(&shell, 0))
+	if (!run_last_cmd_and_wait_all(&shell, 0))
 		return (clean_exit(shell, 1));
 	return (clean_exit(shell, 0));
 }
@@ -65,9 +66,9 @@ static bool	init_shell(t_shell *shell, int argc, char **argv, char **envp)
 		.outpipe_write = -1
 	};
 	env = shell->envp;
-	while (ft_strncmp(*env, "PATH=", 5))
+	while (env && *env && ft_strncmp(*env, "PATH=", 5))
 		env++;
-	if (!*env)
+	if (!env || !*env)
 		return (!perr("pipex: PATH env not found\n"));
 	if (!*(env + 5))
 		return (!perr("pipex: PATH env empty\n"));
@@ -88,10 +89,13 @@ int	main(int argc, char **argv, char **envp)
 	else if (argc >= 5)
 		pipex(shell, argc, argv);
 	else
+	{
 		ft_dprintf(STDERR_FILENO, "Pipex arguments:\n\
-		<infile> <cmd1> <cmd2> <outfile> == < infile cmd1 | cmd2 > outfile\n\
-		OR\nhere_doc <infile> <limiter> <cmd1> <cmd2> <appendfile> == \
-		cmd1 << limiter | cmd2 >> appendfile\n\n\
-		(Two commands is the minimum, feel free to run more!)");
+<infile> <cmd1> <cmd2> <outfile> == < infile cmd1 | cmd2 > outfile\n\
+OR\nhere_doc <limiter> <cmd1> <cmd2> <appendfile> == \
+cmd1 << limiter | cmd2 >> appendfile\n\n\
+(Two commands is the minimum, feel free to run more!)\n");
+			clean_exit(shell, 1);
+	}
 	return (1);
 }

@@ -18,10 +18,7 @@ bool	free_str_arr(char **arr)
 
 	i = 0;
 	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
+		free(arr[i++]);
 	free(arr);
 	return (1);
 }
@@ -61,10 +58,15 @@ bool	cmd_is_empty_or_dir(char *cmd_str)
 	int	dir_fd;
 
 	if (!*cmd_str)
+	{
+		ft_dprintf(STDERR_FILENO, "pipex: : command not found\n");
 		return (1);
+	}
 	dir_fd = open(cmd_str, __O_DIRECTORY);
-	if (dir_fd < 0)
-		return (0);
-	close(dir_fd);
-	return (1);
+	if (dir_fd >= 0)
+	{
+		close(dir_fd);
+		return (1);
+	}
+	return (0);
 }

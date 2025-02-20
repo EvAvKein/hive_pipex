@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredoc_bonus.c                                    :+:      :+:    :+:   */
+/*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,6 +11,22 @@
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+bool	pipex_run_first_cmd(t_shell *shell)
+{
+	int	infile;
+
+	infile = open(shell->argv[1], O_RDONLY);
+	if (infile < 0)
+		return (!pipex_arg_errno(shell->argv[1]));
+	process_cmd(shell, (t_cmd){.in_fd = infile, .out_fd = shell->inpipe_write,
+		.str = shell->argv[2]},
+		(int [4]){shell->inpipe_read, shell->outpipe_read, shell->outpipe_write,
+			 -1});
+	if (close(infile))
+		return (!pipex_arg_errno(shell->argv[1]));
+	return (1);
+}
 
 bool	heredoc_run_first_cmd(t_shell *shell)
 {
@@ -23,7 +39,8 @@ bool	heredoc_run_first_cmd(t_shell *shell)
 			return (!pipex_arg_errno(shell->argv[1]));
 		if (!line)
 			return (!pipex_arg_errno(shell->argv[1]));
-		if (!ft_strncmp(line, shell->argv[2], ft_strlen(shell->argv[2])))
+		if (!ft_strncmp(line, shell->argv[2], ft_strlen(shell->argv[2]) - 1)
+			&& line[ft_strlen(shell->argv[2])] == '\n')
 		{
 			free(line);
 			break ;
@@ -38,19 +55,19 @@ bool	heredoc_run_first_cmd(t_shell *shell)
 	return (1);
 }
 
-bool	heredoc_run_last_cmd_and_wait_all(t_shell *shell)
+bool	run_last_cmd_and_wait_all(t_shell *shell, bool heredoc)
 {
 	int	outfile;
 	int	cmd_count;
 
-	cmd_count = shell->argc - 4;
+	cmd_count = shell->argc - 4 - heredoc;
 	outfile = open(shell->argv[shell->argc - 1], O_WRONLY | O_CREAT | O_TRUNC,
 			0644);
 	if (outfile < 0)
 		return (!pipex_arg_errno(shell->argv[shell->argc - 1]));
-	process_cmd(shell, (t_cmd){.in_fd = shell->outpipe_read, .out_fd = outfile,
+	process_cmd(shell, (t_cmd){.in_fd = shell->inpipe_read, .out_fd = outfile,
 		.str = shell->argv[cmd_count + 1]},
-		(int [4]){shell->outpipe_write, shell->inpipe_read,
+		(int [4]){shell->outpipe_write, shell->outpipe_read,
 		shell->inpipe_write, -1});
 	if (close_until_negative((int [5]){shell->inpipe_read, shell->inpipe_write,
 			shell->outpipe_read, shell->outpipe_write, -1}))

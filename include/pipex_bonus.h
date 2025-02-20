@@ -15,8 +15,9 @@
 
 # include "pipex.h"
 
+bool	pipex_run_first_cmd(t_shell *shell);
 bool	heredoc_run_first_cmd(t_shell *shell);
-bool	heredoc_run_last_cmd_and_wait_all(t_shell *shell, bool heredoc);
+bool	run_last_cmd_and_wait_all(t_shell *shell, bool heredoc);
 void	cycle_pipes(t_shell *shell);
 
 #endif

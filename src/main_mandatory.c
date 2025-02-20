@@ -27,14 +27,14 @@ static bool	init_shell(t_shell *shell, int argc, char **argv, char **envp)
 		.outpipe_write = -1
 	};
 	env = shell->envp;
-	while (ft_strncmp(*env, "PATH=", 5))
+	while (env && *env && ft_strncmp(*env, "PATH=", 5))
 		env++;
-	if (!*env)
+	if (!env || !*env)
 		return (!perr("pipex: PATH env not found\n"));
 	if (!*(env + 5))
 		return (!perr("pipex: PATH env empty\n"));
 	shell->bin_paths = (*env + 5);
-	if (pipe(&shell->inpipe_read) || pipe(&shell->outpipe_read))
+	if (pipe(&shell->outpipe_read))
 		return (!pipex_arg_errno("pipe failure"));
 	return (1);
 }
@@ -45,15 +45,15 @@ static int	pipex(t_shell shell, char **argv)
 	int	outfile;
 
 	infile = open(argv[1], O_RDONLY);
-	if (infile > 0)
+	if (infile < 0)
+		pipex_arg_errno(argv[1]);
+	else
 	{
 		process_cmd(&shell, (t_cmd){.in_fd = infile, .out_fd = shell.outpipe_write,
 			.str = argv[2]}, (int [2]){shell.outpipe_read, -1});
 		if (close(infile))
 			return (!pipex_arg_errno(argv[1]));
 	}
-	else
-		pipex_arg_errno(argv[1]);
 	outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (outfile < 0)
 		return (!pipex_arg_errno(argv[4]));

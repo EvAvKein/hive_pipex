@@ -25,7 +25,7 @@ SRC_MAND_FILES := main_mandatory.c \
 				  perrs.c
 
 SRC_BONUS_FILES := main_bonus.c \
-				   heredoc_bonus.c \
+				   pipex_bonus.c \
 				   cmd.c \
 				   binaries.c \
 				   exit.c \
@@ -36,7 +36,7 @@ INCLUDE_DIR := include
 INCLUDE_FILES := pipex.h \
 				 perrs.h
 
-COMPILE_FLAGS := -Wall -Wextra -Werror -I$(INCLUDE_DIR) -g
+COMPILE_FLAGS := -Wall -Wextra -Werror -I$(INCLUDE_DIR)
 
 OBJ_MAND := $(SRC_MAND_FILES:%.c=$(SRC_DIR)/%.o)
 OBJ_BONUS := $(SRC_BONUS_FILES:%.c=$(SRC_DIR)/%.o)

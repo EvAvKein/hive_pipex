@@ -44,14 +44,13 @@ typedef struct s_shell
 void	process_cmd(t_shell *shell, t_cmd cmd, int *two_remaining_fds);
 char	*path_to_binary(t_shell *shell, char *bin);
 
-bool	run_first_cmd(t_shell *shell);
-bool	run_last_cmd_and_wait_all(t_shell *shell);
 
 bool	free_str_arr(char **arr);
 bool	if_either(int first, int second);
 bool	close_until_negative(int *fds);
 bool	cmd_is_empty_or_dir(char *cmd_str);
 
+int		close_unless_pipe(t_shell *shell, int fd);
 int		clean(t_shell shell);
 int		clean_exit(t_shell shell, int exit_code);
 

@@ -12,7 +12,7 @@
 
 #include "pipex.h"
 
-static char	**str_to_argv(char *str)
+static char	**str_to_argv(t_shell *shell, char *str)
 {
 	int		i;
 	char	**split;
@@ -21,17 +21,15 @@ static char	**str_to_argv(char *str)
 		return (NULL);
 	split = ft_split(str, ' ');
 	if (!split)
-	{
-		pipex_arg_errno("command parsing");
-		return (NULL);
-	}
+		clean_exit(*shell, pipex_arg_errno("command parsing"));
 	i = 0;
 	while (split[i])
 		i++;
 	if (!i)
 	{
 		free_str_arr(split);
-		return (NULL);
+		clean_exit(*shell,
+			(ft_dprintf(2, "pipex: %s: command not found", str) || 1));
 	}
 	return (split);
 }
@@ -53,62 +51,24 @@ void	process_cmd(t_shell *shell, t_cmd cmd, int *fds_close_until_negative)
 	char	*bin_path;
 
 	pid = fork();
-	if (pid < 0)
-		clean_exit(*shell, !!pipex_arg_errno(cmd.str));
+	if (pid < 0 && (close(cmd.out_fd) || 1))
+		clean_exit(*shell, pipex_arg_errno(cmd.str));
 	if (pid)
 		return ;
-	if (cmd_is_empty_or_dir(cmd.str))
+	if (cmd_is_empty_or_dir(cmd.str)
+			&& (((close_unless_pipe(shell, cmd.in_fd)
+				|| close_unless_pipe(shell, cmd.out_fd))
+				&& pipex_arg_errno(shell->argv[shell->argc - 1])) || 1))
 		clean_exit(*shell, 1);
-	if (dup2(cmd.in_fd, STDIN_FILENO) < 0
-		|| dup2(cmd.out_fd, STDOUT_FILENO) < 0
-		|| if_either(
-			close_until_negative((int [3]){cmd.in_fd, cmd.out_fd, -1}),
-		// don't close in & out FDs? when do i do that then???
-		close_until_negative(fds_close_until_negative)))
-		clean_exit(*shell, !!pipex_arg_errno(cmd.str));
-	cmd_argv = str_to_argv(cmd.str);
-	if (!cmd_argv)
-		clean_exit(*shell, !!pipex_arg_errno("command parsing"));
+	if (dup2(cmd.in_fd, STDIN_FILENO) < 0 || dup2(cmd.out_fd, STDOUT_FILENO) < 0
+		|| if_either(close_until_negative((int [3]){cmd.in_fd, cmd.out_fd, -1}),
+			close_until_negative(fds_close_until_negative)))
+			clean_exit(*shell, pipex_arg_errno(cmd.str));
+	cmd_argv = str_to_argv(shell, cmd.str);
+	if ((!cmd_argv[0]) && free_str_arr(cmd_argv))
+		clean_exit(*shell, !!ft_dprintf(STDERR_FILENO, "pipex: %s: command not found"));
 	bin_path = path_to_binary(shell, cmd_argv[0]);
 	if (!bin_path)
 		bin_path = cmd_argv[0];
 	exec(shell, cmd_argv, bin_path);
-}
-
-bool	run_first_cmd(t_shell *shell)
-{
-	int	infile;
-
-	infile = open(shell->argv[1], O_RDONLY);
-	if (infile < 0)
-		return (!pipex_arg_errno(shell->argv[1]));
-	process_cmd(shell, (t_cmd){.in_fd = infile, .out_fd = shell->outpipe_write,
-		.str = shell->argv[2]},
-		(int [2]){shell->outpipe_read, -1});
-	if (close(infile))
-		return (!pipex_arg_errno(shell->argv[1]));
-	return (1);
-}
-
-bool	run_last_cmd_and_wait_all(t_shell *shell)
-{
-	int	outfile;
-	int	cmd_count;
-
-	cmd_count = shell->argc - 3;
-	outfile = open(shell->argv[cmd_count + 2], O_WRONLY | O_CREAT | O_TRUNC,
-			0644);
-	if (outfile < 0)
-		return (!pipex_arg_errno(shell->argv[cmd_count + 2]));
-	process_cmd(shell, (t_cmd){.in_fd = shell->outpipe_read, .out_fd = outfile,
-		.str = shell->argv[cmd_count + 1]},
-		(int [2]){shell->outpipe_write, -1});
-	if (close_until_negative((int [5]){shell->inpipe_read, shell->inpipe_write,
-			shell->outpipe_read, shell->outpipe_write, -1}))
-		return (!pipex_arg_errno("pipe closing"));
-	while (cmd_count--)
-		wait(NULL);
-	if (close(outfile))
-		return (!pipex_arg_errno(shell->argv[shell->argc - 1]));
-	return (1);
 }
