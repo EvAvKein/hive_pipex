@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 21:15:03 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/21 21:15:25 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/21 21:31:06 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void	process_cmd(t_shell *shell, t_cmd cmd, int *fds_close_until_negative)
 {
 	char	**cmd_argv;
 	pid_t	pid;
-	char	*bin_path;
 
 	pid = fork();
 	if (pid < 0 && (close(cmd.out_fd) || 1))
