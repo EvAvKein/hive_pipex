@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:44:22 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/21 21:22:53 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/21 21:59:14 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@ static int	here_doc(t_shell shell, int argc, char **argv)
 {
 	int	i;
 
-	if (!heredoc_run_first_cmd(&shell))
-		return (clean_exit(shell, 1));
+	heredoc_run_first_cmd(&shell);
 	i = 4;
 	while (i < argc - 2)
 	{
@@ -26,8 +25,7 @@ static int	here_doc(t_shell shell, int argc, char **argv)
 			(int [3]){shell.inpipe_write, shell.outpipe_read, -1});
 		cycle_pipes(&shell);
 	}
-	if (!run_last_cmd_and_wait_all(&shell, 1))
-		return (clean_exit(shell, 1));
+	run_last_cmd_and_wait_all(&shell);
 	return (clean_exit(shell, 0));
 }
 
@@ -35,8 +33,7 @@ static int	pipex(t_shell shell, int argc, char **argv)
 {
 	int	i;
 
-	if (!pipex_run_first_cmd(&shell))
-		return (clean_exit(shell, 1));
+	pipex_run_first_cmd(&shell);
 	i = 3;
 	while (i < argc - 2)
 	{
@@ -45,8 +42,7 @@ static int	pipex(t_shell shell, int argc, char **argv)
 			(int [3]){shell.inpipe_write, shell.outpipe_read, -1});
 		cycle_pipes(&shell);
 	}
-	if (!run_last_cmd_and_wait_all(&shell, 0))
-		return (clean_exit(shell, 1));
+	run_last_cmd_and_wait_all(&shell);
 	return (clean_exit(shell, 0));
 }
 
