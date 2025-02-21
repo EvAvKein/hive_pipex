@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 14:21:09 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/21 12:08:55 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/21 19:59:51 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,26 +58,20 @@ bool	heredoc_run_first_cmd(t_shell *shell)
 bool	run_last_cmd_and_wait_all(t_shell *shell, bool heredoc)
 {
 	int	outfile;
-	int	cmd_count;
 
-	cmd_count = shell->argc - 3 - heredoc;
 	outfile = open(shell->argv[shell->argc - 1], O_WRONLY | O_CREAT | O_TRUNC,
 			0644);
 	if (outfile < 0)
 		return (!pipex_arg_errno(shell->argv[shell->argc - 1]));
 	process_cmd(shell, (t_cmd){.in_fd = shell->inpipe_read, .out_fd = outfile,
-		.str = shell->argv[cmd_count + 1 + heredoc]},
+		.str = shell->argv[shell->waits + 2 + heredoc]},
 		(int [4]){shell->outpipe_write, shell->outpipe_read,
 		shell->inpipe_write, -1});
 	if (close_until_negative((int [5]){shell->inpipe_read, shell->inpipe_write,
 			shell->outpipe_read, shell->outpipe_write, -1}))
 		return (!pipex_arg_errno("pipe closing"));
-	while (cmd_count--)
-	{
-		ft_dprintf(2, "Waiting cmd %i...\n", cmd_count + 1);
+	while (shell->waits--)
 		wait(NULL);
-		ft_dprintf(2, "Waited %i!\n", cmd_count + 1);
-	}
 	if (close(outfile))
 		return (!pipex_arg_errno(shell->argv[shell->argc - 1]));
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:44:22 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/21 12:57:31 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/21 19:59:16 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static int	pipex(t_shell shell, int argc, char **argv)
 
 	if (!pipex_run_first_cmd(&shell))
 		return (clean_exit(shell, 1));
-	i = 2;
+	i = 3;
 	while (i < argc - 2)
 	{
 		process_cmd(&shell, (t_cmd){.in_fd = shell.inpipe_read,
@@ -59,6 +59,7 @@ static bool	init_shell(t_shell *shell, int argc, char **argv, char **envp)
 		.argv = argv,
 		.envp = envp,
 		.bin_paths = NULL,
+		.waits = 0,
 		.inpipe_read = -1,
 		.inpipe_write = -1,
 		.outpipe_read = -1,

@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 21:15:03 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/21 12:22:39 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/21 19:59:24 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	process_cmd(t_shell *shell, t_cmd cmd, int *fds_close_until_negative)
 	pid = fork();
 	if (pid < 0 && (close(cmd.out_fd) || 1))
 		clean_exit(*shell, pipex_arg_errno(cmd.str));
-	if (pid)
+	if (pid && ++shell->waits)
 		return ;
 	if (cmd_is_empty_or_dir(cmd.str)
 			&& ((close_both_unless_pipe(shell, cmd.in_fd, cmd.out_fd)

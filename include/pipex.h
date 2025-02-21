@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:29:55 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/21 12:20:12 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/21 19:04:44 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_shell
 	char	**argv;
 	char	**envp;
 	char	*bin_paths;
+	int		waits;
 	int		inpipe_read;
 	int		inpipe_write;
 	int		outpipe_read;
