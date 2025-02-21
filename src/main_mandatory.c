@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:44:22 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/21 19:45:54 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/21 21:18:39 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static void	pipex(t_shell shell, char **argv)
 	else
 	{
 		process_cmd(&shell, (t_cmd){.in_fd = infile, .str = argv[2],
-		.out_fd = shell.outpipe_write}, (int [2]){shell.outpipe_read, -1});
+			.out_fd = shell.outpipe_write}, (int [2]){shell.outpipe_read, -1});
 		if (close(infile))
 			clean_exit(shell, pipex_arg_errno(argv[1]));
 	}
@@ -65,9 +65,7 @@ static void	pipex(t_shell shell, char **argv)
 		clean_exit(shell, pipex_arg_errno("pipe closing"));
 	while (shell.waits--)
 		wait(NULL);
-	if (close(outfile))
-		clean_exit(shell, pipex_arg_errno(argv[4]));
-	clean_exit(shell, 0);
+	clean_exit(shell, (close(outfile) && pipex_arg_errno(argv[4])));
 }
 
 int	main(int argc, char **argv, char **envp)

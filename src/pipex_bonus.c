@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 14:21:09 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/21 19:59:51 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/21 21:22:41 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ bool	pipex_run_first_cmd(t_shell *shell)
 	process_cmd(shell, (t_cmd){.in_fd = infile, .out_fd = shell->inpipe_write,
 		.str = shell->argv[2]},
 		(int [4]){shell->inpipe_read, shell->outpipe_read, shell->outpipe_write,
-			 -1});
+		-1});
 	if (close(infile))
 		return (!pipex_arg_errno(shell->argv[1]));
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:29:55 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/21 19:04:44 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/21 21:23:02 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ typedef struct s_shell
 
 void	process_cmd(t_shell *shell, t_cmd cmd, int *two_remaining_fds);
 char	*path_to_binary(t_shell *shell, char *bin);
-
 
 bool	free_str_arr(char **arr);
 bool	if_either(int first, int second);

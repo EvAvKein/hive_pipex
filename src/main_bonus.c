@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:44:22 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/21 19:59:16 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/21 21:22:53 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int	main(int argc, char **argv, char **envp)
 OR\nhere_doc <limiter> <cmd1> <cmd2> <appendfile> == \
 cmd1 << limiter | cmd2 >> appendfile\n\n\
 (Two commands is the minimum, feel free to run more!)\n");
-			clean_exit(shell, 1);
+		clean_exit(shell, 1);
 	}
 	return (1);
 }

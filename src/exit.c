@@ -6,13 +6,13 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 10:25:58 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/21 12:18:25 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/21 21:22:17 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int close_both_unless_pipe(t_shell *shell, int fd1, int fd2)
+int	close_both_unless_pipe(t_shell *shell, int fd1, int fd2)
 {
 	t_shell	sh;
 	int		close_err;
@@ -20,14 +20,14 @@ int close_both_unless_pipe(t_shell *shell, int fd1, int fd2)
 	close_err = 0;
 	sh = *shell;
 	if (fd1 != sh.inpipe_read
-			&& fd1 != sh.inpipe_write	
-			&& fd1 != sh.outpipe_read
-			&& fd1 != sh.outpipe_write)
+		&& fd1 != sh.inpipe_write
+		&& fd1 != sh.outpipe_read
+		&& fd1 != sh.outpipe_write)
 		close_err = close(fd1);
 	if (fd2 != sh.inpipe_read
-			&& fd2 != sh.inpipe_write	
-			&& fd2 != sh.outpipe_read
-			&& fd2 != sh.outpipe_write)
+		&& fd2 != sh.inpipe_write
+		&& fd2 != sh.outpipe_read
+		&& fd2 != sh.outpipe_write)
 	{
 		if (close_err)
 		{
