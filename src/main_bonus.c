@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:44:22 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/18 10:32:23 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/21 12:57:31 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,13 @@ static int	here_doc(t_shell shell, int argc, char **argv)
 	return (clean_exit(shell, 0));
 }
 
-
 static int	pipex(t_shell shell, int argc, char **argv)
 {
 	int	i;
 
 	if (!pipex_run_first_cmd(&shell))
 		return (clean_exit(shell, 1));
-	i = 3;
+	i = 2;
 	while (i < argc - 2)
 	{
 		process_cmd(&shell, (t_cmd){.in_fd = shell.inpipe_read,

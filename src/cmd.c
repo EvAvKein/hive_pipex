@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 21:15:03 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/18 10:28:54 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/21 12:22:39 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,12 @@ void	process_cmd(t_shell *shell, t_cmd cmd, int *fds_close_until_negative)
 	if (pid)
 		return ;
 	if (cmd_is_empty_or_dir(cmd.str)
-			&& (((close_unless_pipe(shell, cmd.in_fd)
-				|| close_unless_pipe(shell, cmd.out_fd))
+			&& ((close_both_unless_pipe(shell, cmd.in_fd, cmd.out_fd)
 				&& pipex_arg_errno(shell->argv[shell->argc - 1])) || 1))
 		clean_exit(*shell, 1);
 	if (dup2(cmd.in_fd, STDIN_FILENO) < 0 || dup2(cmd.out_fd, STDOUT_FILENO) < 0
-		|| if_either(close_until_negative((int [3]){cmd.in_fd, cmd.out_fd, -1}),
+		|| if_either(
+			close_both_unless_pipe(shell, cmd.in_fd, cmd.out_fd),
 			close_until_negative(fds_close_until_negative)))
 			clean_exit(*shell, pipex_arg_errno(cmd.str));
 	cmd_argv = str_to_argv(shell, cmd.str);

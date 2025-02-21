@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:29:55 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/17 16:52:07 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/21 12:20:12 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ bool	if_either(int first, int second);
 bool	close_until_negative(int *fds);
 bool	cmd_is_empty_or_dir(char *cmd_str);
 
-int		close_unless_pipe(t_shell *shell, int fd);
+int		close_both_unless_pipe(t_shell *shell, int fd1, int fd2);
 int		clean(t_shell shell);
 int		clean_exit(t_shell shell, int exit_code);
 
