@@ -6,7 +6,7 @@
 #    By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/11 09:31:47 by ekeinan           #+#    #+#              #
-#    Updated: 2025/02/17 15:17:04 by ekeinan          ###   ########.fr        #
+#    Updated: 2025/02/22 11:25:15 by ekeinan          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,7 +53,9 @@ $(LIBFT_LIB):
 $(NAME): $(LIBFT_LIB) $(OBJ_MAND) $(HEADERS)
 	cc $(COMPILE_FLAGS) $(OBJ_MAND) $(LIBFT_LIB) -o $(NAME)
 
-bonus: $(LIBFT_LIB) $(OBJ_BONUS) $(HEADERS)
+bonus: $(BONUS_NAME)
+
+$(BONUS_NAME): $(LIBFT_LIB) $(OBJ_BONUS) $(HEADERS)
 	cc $(COMPILE_FLAGS) $(OBJ_BONUS) $(LIBFT_LIB) -o $(BONUS_NAME)
 
 clean:
