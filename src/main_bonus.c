@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:44:22 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/22 09:48:42 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/22 11:12:56 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int	here_doc(t_shell shell, int argc, char **argv)
 		process_cmd(&shell, (t_cmd){.in_fd = shell.inpipe_read,
 			.out_fd = shell.outpipe_write, .str = argv[i++]},
 			(int [3]){shell.inpipe_write, shell.outpipe_read, -1});
-		cycle_pipes(&shell);
+		swap_pipes(&shell);
 	}
 	run_last_cmd_and_wait_all(&shell);
 	return (clean_exit(shell, 0));
@@ -40,7 +40,7 @@ static int	pipex(t_shell shell, int argc, char **argv)
 		process_cmd(&shell, (t_cmd){.in_fd = shell.inpipe_read,
 			.out_fd = shell.outpipe_write, .str = argv[i++]},
 			(int [3]){shell.inpipe_write, shell.outpipe_read, -1});
-		cycle_pipes(&shell);
+		swap_pipes(&shell);
 	}
 	run_last_cmd_and_wait_all(&shell);
 	return (clean_exit(shell, 0));

@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:44:22 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/21 21:18:39 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/22 10:03:18 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ static void	pipex(t_shell shell, char **argv)
 	if (close_until_negative((int [3]){shell.outpipe_read, shell.outpipe_write,
 			-1}))
 		clean_exit(shell, pipex_arg_errno("pipe closing"));
+	pipes_bnegative(&shell);
 	while (shell.waits--)
 		wait(NULL);
 	clean_exit(shell, (close(outfile) && pipex_arg_errno(argv[4])));

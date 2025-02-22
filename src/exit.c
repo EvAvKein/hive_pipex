@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 10:25:58 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/21 21:22:17 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/22 11:11:24 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,15 @@ int	close_both_unless_pipe(t_shell *shell, int fd1, int fd2)
 	return (close_err);
 }
 
-int	clean(t_shell shell)
+void	pipes_bnegative(t_shell *shell)
+{
+	shell->inpipe_read = -1;
+	shell->inpipe_write = -1;
+	shell->outpipe_read = -1;
+	shell->outpipe_write = -1;
+}
+
+static int	clean(t_shell shell)
 {
 	if (shell.inpipe_read > -1)
 		close(shell.inpipe_read);

@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 17:28:55 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/18 14:53:02 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/22 11:12:56 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ bool	free_str_arr(char **arr)
 	return (1);
 }
 
-void	cycle_pipes(t_shell *shell)
+void	swap_pipes(t_shell *shell)
 {
 	int		swap;
 

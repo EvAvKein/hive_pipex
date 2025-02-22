@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 14:21:09 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/21 22:01:01 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/22 10:03:59 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	run_last_cmd_and_wait_all(t_shell *shell)
 	if (close_until_negative((int [5]){shell->inpipe_read, shell->inpipe_write,
 			shell->outpipe_read, shell->outpipe_write, -1}))
 		clean_exit(*shell, pipex_arg_errno("pipe closing"));
+	pipes_bnegative(shell);
 	while (shell->waits--)
 		wait(NULL);
 	if (close(outfile))

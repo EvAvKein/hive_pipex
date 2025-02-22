@@ -6,16 +6,14 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:29:55 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/21 21:23:02 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/22 10:03:28 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
 
-# include <stdbool.h>
 # include <fcntl.h>
-# include <stdio.h>
 # include <errno.h>
 # include <string.h>
 # include <sys/wait.h>
@@ -51,7 +49,7 @@ bool	close_until_negative(int *fds);
 bool	cmd_is_empty_or_dir(char *cmd_str);
 
 int		close_both_unless_pipe(t_shell *shell, int fd1, int fd2);
-int		clean(t_shell shell);
+void	pipes_bnegative(t_shell *shell);
 int		clean_exit(t_shell shell, int exit_code);
 
 #endif
