@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 10:25:58 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/22 11:11:24 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/22 21:40:05 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,45 +19,32 @@ int	close_both_unless_pipe(t_shell *shell, int fd1, int fd2)
 
 	close_err = 0;
 	sh = *shell;
-	if (fd1 != sh.inpipe_read
-		&& fd1 != sh.inpipe_write
-		&& fd1 != sh.outpipe_read
-		&& fd1 != sh.outpipe_write)
+	if (fd1 != sh.prev_read
+		&& fd1 != sh.pipe_read
+		&& fd1 != sh.pipe_write)
 		close_err = close(fd1);
-	if (fd2 != sh.inpipe_read
-		&& fd2 != sh.inpipe_write
-		&& fd2 != sh.outpipe_read
-		&& fd2 != sh.outpipe_write)
-	{
-		if (close_err)
-		{
-			close(fd2);
-			return (close_err);
-		}
-		return (close(fd2));
-	}
+	if (fd2 != sh.prev_read
+		&& fd2 != sh.pipe_read
+		&& fd2 != sh.pipe_write)
+		return (close(fd2) || close_err);
 	return (close_err);
 }
 
 void	pipes_bnegative(t_shell *shell)
 {
-	shell->inpipe_read = -1;
-	shell->inpipe_write = -1;
-	shell->outpipe_read = -1;
-	shell->outpipe_write = -1;
+	shell->prev_read = -1;
+	shell->pipe_read = -1;
+	shell->pipe_write = -1;
 }
 
-static int	clean(t_shell shell)
+static void	clean(t_shell shell)
 {
-	if (shell.inpipe_read > -1)
-		close(shell.inpipe_read);
-	if (shell.inpipe_write > -1)
-		close(shell.inpipe_write);
-	if (shell.outpipe_read > -1)
-		close(shell.outpipe_read);
-	if (shell.outpipe_write > -1)
-		close(shell.outpipe_write);
-	return (1);
+	if (shell.prev_read > -1 && close(shell.prev_read))
+		pipex_arg_errno("exit cleanup");
+	if (shell.pipe_write > -1 && close(shell.pipe_write))
+		pipex_arg_errno("exit cleanup");
+	if (shell.pipe_read > -1 && close(shell.pipe_read))
+		pipex_arg_errno("exit cleanup");
 }
 
 int	clean_exit(t_shell shell, int exit_code)

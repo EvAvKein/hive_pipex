@@ -6,18 +6,11 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 17:37:51 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/18 10:37:34 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/22 18:37:45 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-int	perr_titled(char *text)
-{
-	write(STDERR_FILENO, "Error\n", 6);
-	perr(text);
-	return (1);
-}
 
 int	perr(char *text)
 {

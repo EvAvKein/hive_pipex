@@ -6,67 +6,33 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 14:44:22 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/22 10:03:18 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/22 23:31:09 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static bool	init_shell(t_shell *shell, int argc, char **argv, char **envp)
-{
-	char	**env;
-
-	*shell = (t_shell){
-		.argc = argc,
-		.argv = argv,
-		.envp = envp,
-		.bin_paths = NULL,
-		.waits = 0,
-		.inpipe_read = -1,
-		.inpipe_write = -1,
-		.outpipe_read = -1,
-		.outpipe_write = -1
-	};
-	env = shell->envp;
-	while (env && *env && ft_strncmp(*env, "PATH=", 5))
-		env++;
-	if (!env || !*env)
-		return (!perr("pipex: PATH env not found\n"));
-	if (!*(env + 5))
-		return (!perr("pipex: PATH env empty\n"));
-	shell->bin_paths = (*env + 5);
-	if (pipe(&shell->outpipe_read))
-		return (!pipex_arg_errno("pipe failure"));
-	return (1);
-}
-
 static void	pipex(t_shell shell, char **argv)
 {
-	int	infile;
-	int	outfile;
-
-	infile = open(argv[1], O_RDONLY);
-	if (infile < 0)
+	shell.prev_read = open(argv[1], O_RDONLY);
+	if (shell.prev_read < 0)
 		pipex_arg_errno(argv[1]);
 	else
-	{
-		process_cmd(&shell, (t_cmd){.in_fd = infile, .str = argv[2],
-			.out_fd = shell.outpipe_write}, (int [2]){shell.outpipe_read, -1});
-		if (close(infile))
-			clean_exit(shell, pipex_arg_errno(argv[1]));
-	}
-	outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (outfile < 0)
+		process_cmd(&shell, argv[2]);
+	if (close_until_negative((int[3]){shell.pipe_write, shell.prev_read, -1}))
+		clean_exit(shell, pipex_arg_errno(argv[1]));
+	shell.prev_read = shell.pipe_read;
+	shell.pipe_write = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (shell.pipe_write < 0)
 		clean_exit(shell, pipex_arg_errno(argv[4]));
-	process_cmd(&shell, (t_cmd){.in_fd = shell.outpipe_read, .out_fd = outfile,
-		.str = argv[3]}, (int [2]){shell.outpipe_write, -1});
-	if (close_until_negative((int [3]){shell.outpipe_read, shell.outpipe_write,
-			-1}))
-		clean_exit(shell, pipex_arg_errno("pipe closing"));
+	shell.pipe_read = -1;
+	process_cmd(&shell, argv[3]);
+	if (close_until_negative((int [3]){shell.prev_read, shell.pipe_write, -1}))
+		clean_exit(shell, pipex_arg_errno("final pipe closures"));
 	pipes_bnegative(&shell);
 	while (shell.waits--)
 		wait(NULL);
-	clean_exit(shell, (close(outfile) && pipex_arg_errno(argv[4])));
+	clean_exit(shell, 0);
 }
 
 int	main(int argc, char **argv, char **envp)
