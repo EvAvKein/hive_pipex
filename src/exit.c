@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 10:25:58 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/23 17:59:21 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/23 20:41:18 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ bool	close_all(t_shell *shell)
 	err = 0;
 	if (shell->prev_read > -1)
 	{
-		err = close(shell->prev_read) || err;
+		err = close(shell->prev_read);
 		shell->prev_read = -1;
 	}
 	if (shell->pipe_write > -1)

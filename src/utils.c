@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 17:28:55 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/23 18:00:11 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/23 20:58:08 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	init_shell(t_shell *shell, int argc, char **argv, char **envp)
 		.pipe_write = -1
 	};
 	if (pipe(&shell->pipe_read))
-		exit(pipex_arg_errno("pipe failure"));
+		exit(pipex_arg_errno("pipe init"));
 	env = shell->envp;
 	while (env && *env && ft_strncmp(*env, "PATH=", 5))
 		env++;
@@ -76,10 +76,10 @@ void	repipe(t_shell *shell)
 	if (err)
 	{
 		close(shell->prev_read);
-		clean_exit(*shell, pipex_arg_errno("pipe closure"));
+		clean_exit(*shell, pipex_arg_errno("repipe closure"));
 	}
 	if (pipe(&shell->pipe_read))
-		clean_exit(*shell, pipex_arg_errno("pipe creation"));
+		clean_exit(*shell, pipex_arg_errno("repipe creation"));
 }
 
 void	unpipe(t_shell *shell)
@@ -101,7 +101,7 @@ void	unpipe(t_shell *shell)
 			close(shell->prev_read);
 			shell->prev_read = -1;
 		}
-		clean_exit(*shell, pipex_arg_errno("fd closure"));
+		clean_exit(*shell, pipex_arg_errno("unpipe closure"));
 	}
 }
 

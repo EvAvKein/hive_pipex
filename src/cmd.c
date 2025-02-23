@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 18:00:42 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/23 18:00:49 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/23 21:06:46 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static char	*path_to_binary(t_shell *shell, char *bin)
 	{
 		set_strchr_colon_and_strlen(paths, &next_colon, &path_len);
 		file_path = ft_calloc(path_len + bin_len + 2, sizeof(char));
-		if (!file_path && pipex_arg_errno("binary lookup"))
+		if (!file_path && pipex_arg_errno("bin path"))
 			return (NULL);
 		((char *)ft_memcpy(file_path, paths, path_len))[path_len] = '/';
 		ft_memcpy(file_path + path_len + 1, bin, bin_len);
@@ -74,7 +74,7 @@ static void	exec(t_shell *shell, char **cmd_argv, char *bin_path)
 		bin_path = cmd_argv[0];
 	execve(bin_path, cmd_argv, shell->envp);
 	pipex_arg_errno(cmd_argv[0]);
-	if (cmd_argv[0] != bin_path)
+	if (bin_path != cmd_argv[0])
 		free(bin_path);
 	free_str_arr(cmd_argv);
 	clean_exit(*shell, 1);

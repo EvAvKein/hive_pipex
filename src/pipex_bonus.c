@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 14:21:09 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/23 17:46:59 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/23 20:57:25 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,18 @@ void	pipex_run_first_cmd(t_shell *shell)
 void	heredoc_run_first_cmd(t_shell *shell)
 {
 	char	*line;
+	int		limiter_len;
 
 	line = NULL;
+	limiter_len = ft_strlen(shell->argv[2]);
 	while (1)
 	{
 		if (!set_next_line(STDIN_FILENO, &line))
 			clean_exit(*shell, pipex_arg_errno(shell->argv[1]));
 		if (!line)
 			clean_exit(*shell, pipex_arg_errno(shell->argv[1]));
-		if (!ft_strncmp(line, shell->argv[2], ft_strlen(shell->argv[2]) - 1)
-			&& line[ft_strlen(shell->argv[2])] == '\n')
+		if (!ft_strncmp(line, shell->argv[2], limiter_len - 1)
+			&& line[limiter_len] == '\n')
 		{
 			free(line);
 			break ;
@@ -54,10 +56,9 @@ void	run_last_cmd_and_wait_all(t_shell *shell, int open_oflags)
 		pipex_arg_errno(shell->argv[shell->argc - 1]);
 	else
 	{
-		shell->pipe_read = -1;
 		process_cmd(shell, shell->argv[shell->argc - 2]);
 		if (close_all(shell))
-			pipex_arg_errno("pipe closing 2");
+			pipex_arg_errno("final pipe closure");
 	}
 	while (shell->waits--)
 		wait(NULL);
