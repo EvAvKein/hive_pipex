@@ -6,7 +6,7 @@
 #    By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/11 09:31:47 by ekeinan           #+#    #+#              #
-#    Updated: 2025/02/22 23:38:31 by ekeinan          ###   ########.fr        #
+#    Updated: 2025/02/23 18:02:34 by ekeinan          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,24 +19,18 @@ LIBFT_LIB := $(LIBFT_DIR)/libft_full.a
 SRC_DIR := src
 SRC_MAND_FILES := main_mandatory.c \
 				  cmd.c \
-				  binaries.c \
 				  exit.c \
-				  utils.c \
-				  perrs.c
+				  utils.c 
 
 SRC_BONUS_FILES := main_bonus.c \
 				   pipex_bonus.c \
 				   cmd.c \
-				   binaries.c \
 				   exit.c \
-				   utils.c \
-				   perrs.c
+				   utils.c 
 
 INCLUDE_DIR := include
-INCLUDE_MAND := pipex.h \
-				perrs.h
-INCLUDE_BONUS := pipex_bonus.h \
-				 perrs.h
+INCLUDE_MAND := pipex.h
+INCLUDE_BONUS := pipex_bonus.h
 
 COMPILE_FLAGS := -Wall -Wextra -Werror -I$(INCLUDE_DIR)
 

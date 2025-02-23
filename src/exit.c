@@ -6,35 +6,44 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 10:25:58 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/22 21:40:05 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/23 17:59:21 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	close_both_unless_pipe(t_shell *shell, int fd1, int fd2)
+bool	free_str_arr(char **arr)
 {
-	t_shell	sh;
-	int		close_err;
+	size_t	i;
 
-	close_err = 0;
-	sh = *shell;
-	if (fd1 != sh.prev_read
-		&& fd1 != sh.pipe_read
-		&& fd1 != sh.pipe_write)
-		close_err = close(fd1);
-	if (fd2 != sh.prev_read
-		&& fd2 != sh.pipe_read
-		&& fd2 != sh.pipe_write)
-		return (close(fd2) || close_err);
-	return (close_err);
+	i = 0;
+	while (arr[i])
+		free(arr[i++]);
+	free(arr);
+	return (1);
 }
 
-void	pipes_bnegative(t_shell *shell)
+bool	close_all(t_shell *shell)
 {
-	shell->prev_read = -1;
-	shell->pipe_read = -1;
-	shell->pipe_write = -1;
+	bool	err;
+
+	err = 0;
+	if (shell->prev_read > -1)
+	{
+		err = close(shell->prev_read) || err;
+		shell->prev_read = -1;
+	}
+	if (shell->pipe_write > -1)
+	{
+		err = close(shell->pipe_write) || err;
+		shell->pipe_write = -1;
+	}
+	if (shell->pipe_read > -1)
+	{
+		err = close(shell->pipe_read) || err;
+		shell->pipe_read = -1;
+	}
+	return (err);
 }
 
 static void	clean(t_shell shell)
