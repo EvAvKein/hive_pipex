@@ -6,7 +6,7 @@
 /*   By: ekeinan <ekeinan@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 17:28:55 by ekeinan           #+#    #+#             */
-/*   Updated: 2025/02/23 20:58:08 by ekeinan          ###   ########.fr       */
+/*   Updated: 2025/02/24 16:48:55 by ekeinan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ bool	cmd_is_empty_or_dir(char *cmd_str)
 	{
 		if (close(dir_fd))
 			pipex_arg_errno(cmd_str);
-		ft_dprintf(2, "pipex: %s: %s\n", cmd_str, strerror(21));
+		ft_dprintf(2, "pipex: %s: %s\n", cmd_str, strerror(EISDIR));
 		return (1);
 	}
 	return (0);
