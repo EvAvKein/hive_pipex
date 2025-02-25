@@ -29,9 +29,17 @@ The bonus is about:
 > [!NOTE]
 > Code was written and tested for Linux (using Hive's Ubuntu iMacs)
 
-<!-- - Optionally, adjust settings at `include/settings.h`
-- Compile by running `make` (or `make visualize` for visualized map validation and game-state history)
-- Run `./so_long` with a map (e.g. the ones in the `maps` directory) -->
+### Basic
+- Run `make` (or even `make neat`!)
+- Run the program as `./pipex <infile> <cmd1> <cmd2> <outfile>`
+
+### Bonus
+- Run `make bonus`
+- Run the program as:
+	- `./pipex_bonus <infile> <cmd1> <cmd2> <optionally, even more commandss!> <outfile>`
+	- `./pipex_bonus here_doc <heredoc limiter> <cmd1> <cmd2> <optionally, even more commandss!> <appendfile>`
+
+(Running the `pipex` or `pipex_bonus` without extra arguments will show this info along with the equivalent shell functionalities)
 
 ---
 
