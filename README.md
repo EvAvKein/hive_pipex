@@ -36,8 +36,8 @@ The bonus is about:
 ### Bonus
 - Run `make bonus`
 - Run the program as:
-	- `./pipex_bonus <infile> <cmd1> <cmd2> <optionally, even more commandss!> <outfile>`
-	- `./pipex_bonus here_doc <heredoc limiter> <cmd1> <cmd2> <optionally, even more commandss!> <appendfile>`
+	- `./pipex_bonus <infile> <cmd1> <cmd2> <optionally, even more commands!> <outfile>`
+	- `./pipex_bonus here_doc <heredoc limiter> <cmd1> <cmd2> <optionally, even more commands!> <appendfile>`
 
 (Running the `pipex` or `pipex_bonus` without extra arguments will show this info along with the equivalent shell functionalities)
 
