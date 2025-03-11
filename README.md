@@ -19,9 +19,6 @@ The bonus is about:
 - Replicating the basic behavior following shell script:  
 `cm1 << limiter | cmd2 >> appendfile`  
 
-> 
-> 
-
 ---
 
 ## Usage
