@@ -30,12 +30,13 @@ SET_NEXT_LINE_SRC := set_next_line.c \
 		  			 set_next_line_utils.c
 SET_NEXT_LINE_OBJ := $(SET_NEXT_LINE_SRC:%.c=$(SET_NEXT_LINE_DIR)/%.o)
 
+CC := clang
 COMPILE_FLAGS := -Wall -Wextra -Werror -I$(LIBBASE_FILE)
 
 all: $(NAME)
 
 %.o: %.c
-	cc $(COMPILE_FLAGS) -c $< -o $@
+	$(CC) $(COMPILE_FLAGS) -c $< -o $@
 		
 $(LIBBASE_PATH):
 	@make bonus -C $(LIBBASE_DIR) --no-print-directory

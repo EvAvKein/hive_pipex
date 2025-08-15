@@ -61,12 +61,13 @@ SRC_BONUS := ft_lstnew_bonus.c \
 OBJ_CORE := $(SRC_CORE:.c=.o)
 OBJ_BONUS := $(SRC_BONUS:.c=.o)
 
+CC := clang
 COMPILE_FLAGS := -Wall -Wextra -Werror
 
 all: $(NAME)
 
 %.o: %.c
-	cc $(COMPILE_FLAGS) -c $< -o $@
+	$(CC) $(COMPILE_FLAGS) -c $< -o $@
 
 $(NAME): $(OBJ_CORE)
 	ar -rcs $(NAME) $(OBJ_CORE)

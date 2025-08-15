@@ -32,6 +32,7 @@ INCLUDE_DIR := include
 INCLUDE_MAND := pipex.h
 INCLUDE_BONUS := pipex_bonus.h
 
+CC := clang
 COMPILE_FLAGS := -Wall -Wextra -Werror -I$(INCLUDE_DIR)
 
 OBJ_MAND := $(SRC_MAND_FILES:%.c=$(SRC_DIR)/%.o)
@@ -45,15 +46,15 @@ $(LIBFT_LIB):
 	@make -C $(LIBFT_DIR) -s --no-print-directory
 
 %.o: %.c
-	cc $(COMPILE_FLAGS) -c $< -o $@
+	$(CC) $(COMPILE_FLAGS) -c $< -o $@
 
 $(NAME): $(LIBFT_LIB) $(OBJ_MAND) $(HEADERS_MAND)
-	cc $(COMPILE_FLAGS) $(OBJ_MAND) $(LIBFT_LIB) -o $(NAME)
+	$(CC) $(COMPILE_FLAGS) $(OBJ_MAND) $(LIBFT_LIB) -o $(NAME)
 
 bonus: $(BONUS_NAME)
 
 $(BONUS_NAME): $(LIBFT_LIB) $(OBJ_BONUS) $(HEADERS_BONUS)
-	cc $(COMPILE_FLAGS) $(OBJ_BONUS) $(LIBFT_LIB) -o $(BONUS_NAME)
+	$(CC) $(COMPILE_FLAGS) $(OBJ_BONUS) $(LIBFT_LIB) -o $(BONUS_NAME)
 
 clean:
 	@make -C $(LIBFT_DIR) $@ --no-print-directory
